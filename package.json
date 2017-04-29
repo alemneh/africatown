@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/alemneh/africatown/issues"
   },
-  "homepage": "https://github.com/alemneh/africatown#readme"
+  "homepage": "https://github.com/alemneh/africatown#readme",
+  "dependencies": {
+    "body-parser": "1.17.1",
+    "express": "4.15.2",
+    "mongoose": "4.9.6"
+  }
 }

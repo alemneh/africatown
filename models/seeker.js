@@ -21,7 +21,7 @@ module.exports = (mongoose, models) => {
     connectionToBlkCommunity: String,
     vision: String,
     barrier: String,
-    regularVistor: Boolen,
+    regularVistor: Boolean,
     visitingReason: String,
   });
 
