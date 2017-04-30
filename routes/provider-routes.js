@@ -1,30 +1,30 @@
 'use strict';
 const models = require('../models');
 
-const Seeker = models.Seeker;
+const Provider = models.Provider;
 
-let SeekerRoutes = {
+let ProviderRoutes = {
 
-  createSeeker: function(req, res) {
-    const newSeeker = new Seeker(req.body);
-    newSeeker.save((err, seeker) => {
+  createProvider: function(req, res) {
+    const newProvider = new Provider(req.body);
+    newProvider.save((err, provider) => {
       if(err) throw err;
       res.json({
-        message: 'New Seeker Created!',
-        seeker
+        message: 'New Provider Created!',
+        provider
       });
     });
   },
 
-  getAllSeekers: function(re, res) {
-    Seeker.find({}, (err, seekers) => {
+  getAllProviders: function(re, res) {
+    Provider.find({}, (err, providers) => {
       if(err) throw err;
 
       res.json({
-        seekers
+        providers
       });
     });
   }
 };
 
-module.exports = SeekerRoutes;
+module.exports = ProviderRoutes;
