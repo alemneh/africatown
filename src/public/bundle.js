@@ -21790,6 +21790,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _property = __webpack_require__(214);
+
+	var _property2 = _interopRequireDefault(_property);
+
 	var _axios = __webpack_require__(185);
 
 	var _axios2 = _interopRequireDefault(_axios);
@@ -21822,10 +21826,24 @@
 	      this.fetchProperties();
 	    }
 	  }, {
+	    key: 'renderProperties',
+	    value: function renderProperties() {
+	      return this.state.properties.map(function (property, index) {
+	        return _react2.default.createElement(
+	          'li',
+	          { key: index },
+	          _react2.default.createElement(_property2.default, { property: property })
+	        );
+	      });
+	    }
+	  }, {
 	    key: 'fetchProperties',
 	    value: function fetchProperties() {
+	      var _this2 = this;
+
 	      _axios2.default.get(("http://localhost:3000") + '/properties').then(function (res) {
-	        console.log(res);
+	        console.log(res.data.properties);
+	        _this2.setState({ properties: res.data.properties });
 	      }).catch(function (err) {
 	        console.log(err);
 	      });
@@ -21834,9 +21852,14 @@
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'h1',
+	        'section',
 	        null,
-	        'Properties'
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Properties'
+	        ),
+	        this.renderProperties()
 	      );
 	    }
 	  }]);
@@ -25367,6 +25390,58 @@
 	  };
 	};
 
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Property = function Property(_ref) {
+	  var property = _ref.property;
+
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      property.address
+	    ),
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      property.price
+	    ),
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      property.numOfBedrms
+	    ),
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      property.numOfBathrms
+	    ),
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      property.description
+	    )
+	  );
+	};
+
+	exports.default = Property;
 
 /***/ })
 /******/ ]);
