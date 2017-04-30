@@ -16,7 +16,7 @@ module.exports = (mongoose, models) => {
     laundry: String,
     parking: String,
     sqft: Number,
-    price: String,
+    price: Number,
     description: String
   });
 

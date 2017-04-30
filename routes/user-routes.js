@@ -2,6 +2,7 @@
 const models = require('../models');
 
 const User = models.User;
+const Property = models.Property;
 
 let UserRoutes = {
 
@@ -85,7 +86,7 @@ let UserRoutes = {
         let properties = user.properties.filter((prop) => {
           return req.body.address == prop.address;
         });
-        if(prop.length > 0) {
+        if(properties.length > 0) {
           res.json({message: 'book already exist!'});
           console.log('aborted promise');
           throw new Error('book already exist!');
