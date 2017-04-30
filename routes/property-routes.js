@@ -5,7 +5,7 @@ const Property = models.Property;
 
 let PropertyRoutes = {
 
-  getAllProperties: function(res, req) {
+  getAllProperties: function(req, res) {
     Property.find({}, (err, properties) => {
       if(err) throw err;
 
@@ -15,7 +15,7 @@ let PropertyRoutes = {
     });
   },
 
-  getOneProperty: function(res, req) {
+  getOneProperty: function(req, res) {
     Property.findById(req.params.id, (err, property) => {
       if(err) throw err;
 

@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 var env = process.env.NODE_ENV || 'development';
 var CONFIG = require('./config/config')[env];
-var BUILD_DIR = path.resolve(__dirname, 'src/app/public');
+var BUILD_DIR = path.resolve(__dirname, 'src/public');
 var APP_DIR = path.resolve(__dirname, 'src/app');
 var PROD;
 if(process.env.NODE_ENV == 'production') {
