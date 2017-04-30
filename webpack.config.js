@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var env = process.env.NODE_ENV || 'development';
+var autoprefixer = require('autoprefixer');
 var CONFIG = require('./config/config')[env];
 var BUILD_DIR = path.resolve(__dirname, 'src/public');
 var APP_DIR = path.resolve(__dirname, 'src/app');
@@ -33,16 +34,19 @@ var config = {
   },
   module: {
     loaders: [
-      {
-        test: /\.jsx?/,
-        include: APP_DIR,
-        loader: 'babel-loader'
-      }
+      { test: /\.jsx?/, include: APP_DIR, loader: 'babel-loader' },
+      { test: /\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss-loader'},
+      { test: /\.png(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=100000&mimetype=image/png'},
+      { test: /\.jpg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?mimetype=image/jpg'},
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'}
     ]
   },
   plugins: [definePlugin],
   resolveLoader: {
     root: path.join(__dirname, 'node_modules')
+  },
+  postcss: function() {
+    return [autoprefixer];
   }
 };
 

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import PropertyList from './components/propertyList/propertyList';
+import HomePage from './components/home/home';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
   render() {
     return (
-      <PropertyList />
+      <MuiThemeProvider>
+        <HomePage />
+      </MuiThemeProvider>
     );
   }
 };

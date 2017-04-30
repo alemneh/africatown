@@ -4,6 +4,7 @@ module.exports = (mongoose, models) => {
   let Schema = mongoose.Schema;
   const propertySchema = mongoose.Schema({
     _owner: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    propPicUrl: String,
     address: String,
     isCatsOk: Boolean,
     isDogsOk: Boolean,

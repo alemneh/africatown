@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Property from '../property/property';
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 import axios from 'axios';
 
 
@@ -18,7 +20,7 @@ class PropertyList extends Component {
   renderProperties() {
     return this.state.properties.map((property, index) => {
       return (
-        <li key={index}><Property property={property}/></li>
+        <Property property={property} key={index}/>
       )
     });
   }
@@ -35,10 +37,31 @@ class PropertyList extends Component {
   }
 
   render() {
+    const styles = {
+      root: {
+        marginBottom: 24,
+        marginRight: 24,
+        maxWidth: 360,
+        width: '100%',
+      },
+      container: {
+        width: '960px',
+        margin: '0 auto'
+      },
+      bottomTear: {
+        display: 'block',
+        position: 'relative',
+        marginTop: -10,
+        maxWidth: 360,
+      },
+    };
+
     return (
-      <section>
-        <h1>Properties</h1>
-        { this.renderProperties() }
+      <section style={styles.container}>
+        <List>
+          <Subheader>Today</Subheader>
+          { this.renderProperties() }
+        </List>
       </section>
 
     )
