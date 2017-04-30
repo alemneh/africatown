@@ -6,7 +6,8 @@ var CONFIG = require('../config/config.json')[env];
 mongoose.connect(process.env[CONFIG.database] || CONFIG.database);
 const models = {};
 
-require('./seeker')(mongoose, models);
+require('./user')(mongoose, models);
+require('./property')(mongoose, models);
 
 
 

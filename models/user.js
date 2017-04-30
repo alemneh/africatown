@@ -7,6 +7,7 @@ module.exports = function(mongoose, models) {
   const userSchema = new mongoose.Schema({
     name: String,
     password: String,
+    title: String,
     city: String,
     state: String,
     email: String,
