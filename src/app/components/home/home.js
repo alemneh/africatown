@@ -7,21 +7,33 @@ import RaisedButton from 'material-ui/RaisedButton';
 class Home extends Component {
   render() {
     const styles = {
-      parallax: {
-          backgroundImage: "url('./public/images/bg-cover.jpg')",
-          height: '100%',
-          width: '80px',
-          margin: '10px',
-          backgroundAttachment: 'fixed',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: '50% 0px',
-          padding: '0'
+      image: {
+        background: 'url(./public/images/bg-cover.jpg)',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: '50% 0',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+         WebkitBackgroundSize: 'cover',
+         MozBackgroundSize: 'cover',
+         OBackgroundSize: 'cover',
+         BackgroundSize: 'cover',
+         height: '100%'
       },
       tagLine: {
         color: 'white',
-        fontSize: '20px'
+        fontSize: '72px'
+
+      },
+      tagLineContainer: {
+        textAlign: 'center'
+      },
+      logo: {
+        marginLeft: '25px',
+        marginTop: '25px'
+      },
+      p: {
+        fontSize: '24px',
+        color: 'white'
       }
     };
 
@@ -30,15 +42,17 @@ class Home extends Component {
     };
 
     return (
-      <section style={{height: "100%"}}>
-        <div id='cover'>
-          <img src="./public/images/logo.png" />
+      <section style={styles.image}>
+        <div >
+          <img style={styles.logo} src="./public/images/logo.png" />
         </div>
-        <h1 style={styles.tagLine}>It Takes A Village</h1>
-        <p>Connecting community builders with affordable space to live grow and build.</p>
+        <div style={styles.tagLineContainer}>
+          <h1 style={styles.tagLine}>It Takes A Village</h1>
+          <p style={styles.p}>Connecting community builders with affordable space to live grow and build.</p>
+        </div>
         <div style={{textAlign: 'center'}}>
-          <RaisedButton label="Seekers" primary={true} style={style} />
-          <RaisedButton label="Providers" secondary={true} style={style} />
+          <Link to="/properties-list"><RaisedButton label="Seekers" primary={true} style={style} /></Link>
+          <Link to="/add-property"><RaisedButton label="Providers" secondary={true} style={style} /></Link>
         </div>
       </section>
     )

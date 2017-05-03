@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
@@ -7,8 +8,9 @@ class App extends Component {
   }
   render() {
     return (
-      <div>
+      <div style={{height: '100%'}}>
         <MuiThemeProvider>
+          
           { this.props.children }
         </MuiThemeProvider>
       </div>

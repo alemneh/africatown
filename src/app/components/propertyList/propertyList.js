@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Property from '../property/property';
 import {List, ListItem} from 'material-ui/List';
+import { browserHistory } from 'react-router';
 import Subheader from 'material-ui/Subheader';
 import axios from 'axios';
 
@@ -14,6 +15,8 @@ class PropertyList extends Component {
   }
 
   componentWillMount() {
+    const token = localStorage.getItem('token');
+    if(!token) browserHistory.push('/signin-form');
     this.fetchProperties();
   }
 

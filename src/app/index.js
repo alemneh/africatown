@@ -4,6 +4,8 @@ import {Route, Router, browserHistory, IndexRoute} from 'react-router';
 import PropertyList from './components/PropertyList/PropertyList';
 import AddPropertyForm from './components/addPropForm/addPropForm';
 import HomePage from './components/home/home';
+import SignInForm from './components/signin/signin';
+import SignUpForm from './components/SignUpForm/SignUpForm';
 import App from './App';
 
 
@@ -12,6 +14,8 @@ const routes = (
     <IndexRoute component={HomePage}/>
     <Route path="/properties-list" component={PropertyList} />
     <Route path="/add-property" component={AddPropertyForm} />
+    <Route path="/signin-form" component={SignInForm} />
+    <Route path="/signup-form" component={SignUpForm} />
   </Route>
 )
 
