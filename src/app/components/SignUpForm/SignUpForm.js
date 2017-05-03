@@ -53,32 +53,9 @@ class SignUpForm extends Component {
       }
     }
     return (
-      <section style={styles.form}>
-        <h1>Sign Up Form</h1>
-        <form >
-          <Paper zDepth={2}>
-            <TextField hintText="Name" name="name" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="Password" name="password" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="Title" name="title" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="Email" name="email" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="City" name="description" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="Income" name="income" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="Housing Budget" name="housingBudget" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="House Hold Size" name="houseHoldSize" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-            <TextField hintText="Head Of House Hold" name="headOfHouseHold" style={style} underlineShow={false} onChange={this.handleInputChange}/>
-            <Divider />
-          </Paper>
-          <RaisedButton onClick={this.handelSignUp} label="Sign Up" primary={true} style={style} />
-       </form>
-     </section>
+      <section className="container">
+
+      </section>
     )
   }
 }

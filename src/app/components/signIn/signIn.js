@@ -54,30 +54,33 @@ class SignInForm extends Component {
   render() {
     const styles = {
       form: {
-        width: '960px',
+        width: '360px',
         margin: '0 auto'
+      },
+      btn: {
+        marginRight: '25px'
       }
     }
     return (
-      <form onSubmit={ this.handelSignIn }className="form-horizontal">
+      <form style={styles.form} onSubmit={ this.handelSignIn }className="form-horizontal">
         <fieldset>
           <legend>Login</legend>
           <div className="form-group">
             <label for="inputEmail" className="col-lg-2 control-label">Email</label>
             <div className="col-lg-10">
-              <input onChange={ this.handleInputChange } type="text" className="form-control" id="inputEmail" placeholder="Email" />
+              <input required onChange={ this.handleInputChange } type="text" className="form-control" id="inputEmail" placeholder="Email" />
             </div>
           </div>
           <div className="form-group">
             <label for="inputPassword" className="col-lg-2 control-label">Password</label>
             <div className="col-lg-10">
-              <input onChange={ this.handleInputChange } type="password" className="form-control" id="inputPassword" placeholder="Password" />
+              <input required onChange={ this.handleInputChange } type="password" className="form-control" id="inputPassword" placeholder="Password" />
             </div>
           </div>
           <div className="form-group">
             <div className="col-lg-10 col-lg-offset-2">
-              <button type="reset" className="btn btn-default">Cancel</button>
-              <button type="submit" className="btn btn-primary">Login</button>
+              <button style={styles.btn} type="submit" className="btn btn-primary">Login</button>
+              <button style={styles.btn} type="reset" className="btn btn-default">Join</button>
             </div>
           </div>
         </fieldset>

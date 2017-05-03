@@ -34,11 +34,7 @@ var config = {
   },
   module: {
     loaders: [
-      { test: /\.jsx?/, include: APP_DIR, loader: 'babel-loader' },
-      { test: /\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss-loader'},
-      { test: /\.png(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=100000&mimetype=image/png'},
-      { test: /\.jpg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?mimetype=image/jpg'},
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'}
+      { test: /\.jsx?/, include: APP_DIR, loader: 'babel-loader' }
     ]
   },
   plugins: [definePlugin],
@@ -49,7 +45,11 @@ var config = {
     return [autoprefixer];
   }
 };
-
+// ,
+// { test: /\.css$/, loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss-loader'},
+// { test: /\.png(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=100000&mimetype=image/png'},
+// { test: /\.jpg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?mimetype=image/jpg'},
+// { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'}
 
 
 module.exports = config;

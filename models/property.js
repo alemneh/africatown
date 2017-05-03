@@ -18,7 +18,10 @@ module.exports = (mongoose, models) => {
     parking: String,
     sqft: Number,
     price: Number,
-    description: String
+    description: String,
+    telephone: Number,
+    city: String,
+    zipCode: Number
   });
 
   const Property = mongoose.model('Property', propertySchema);
