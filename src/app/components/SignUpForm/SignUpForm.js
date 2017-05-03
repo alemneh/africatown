@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-import Divider from 'material-ui/Divider';
-import RaisedButton from 'material-ui/RaisedButton';
 import { browserHistory } from 'react-router';
 import axios from 'axios';
-import Paper from 'material-ui/Paper';
+import SeekerForm from '../seekerForm/seekerForm';
+import ProviderForm from '../providerForm/providerForm';
 
 
-const style = {
-  marginLeft: 20,
-};
 
 class SignUpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newUser: {}
+      newUser: {},
+      form: null
     }
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handelSelectForm  = this.handelSelectForm.bind(this);
     this.handelSignUp = this.handelSignUp.bind(this);
   }
 
@@ -45,16 +42,34 @@ class SignUpForm extends Component {
       })
   }
 
-  render() {
-    const styles = {
-      form: {
-        width: '960px',
-        margin: '0 auto'
-      }
+  handelSelectForm(e) {
+    e.preventDefault()
+    console.log(e.target.value);
+    this.setState({ form: e.target.value });
+  }
+
+  renderSignUpForm() {
+    const { form, handleInputChange, handelSignUp } = this.state;
+    if(form == 'provider') {
+      return (<ProviderForm handleInputChange={handleInputChange}
+                            handelSignUp={handelSignUp}/>)
+    } else if (form == 'seeker') {
+      return (<SeekerForm handleInputChange={handleInputChange}
+                          handelSignUp={handelSignUp}/>)
+    } else {
+      return (
+        <div className="col-lg-10 col-lg-offset-2">
+          <button  onClick={this.handelSelectForm } type="submit" value="seeker" className="btn btn-default">Seeker</button>
+          <button  onClick={this.handelSelectForm } type="submit" value="provider" className="btn btn-primary">Provider</button>
+        </div>
+      )
     }
+  }
+
+  render() {
     return (
       <section className="container">
-
+        { this.renderSignUpForm() }
       </section>
     )
   }

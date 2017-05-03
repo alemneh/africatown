@@ -25,6 +25,8 @@ module.exports = function(mongoose, models) {
     profilePicUrl: String,
     zipCode: Number,
     connectionToBlkCommunity: String,
+    wantToLiveInCD: String,
+    contribution: String,
     vision: String,
     barrier: String,
     regularVistor: { type: Boolean, default: false},

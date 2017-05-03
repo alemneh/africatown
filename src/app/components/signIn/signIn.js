@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import Divider from 'material-ui/Divider';
-import Paper from 'material-ui/Paper';
 import { browserHistory, Link } from 'react-router';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 
 const style = {
@@ -80,7 +76,7 @@ class SignInForm extends Component {
           <div className="form-group">
             <div className="col-lg-10 col-lg-offset-2">
               <button style={styles.btn} type="submit" className="btn btn-primary">Login</button>
-              <button style={styles.btn} type="reset" className="btn btn-default">Join</button>
+              <Link to="/signup-form" className="btn btn-default">Join</Link>
             </div>
           </div>
         </fieldset>
