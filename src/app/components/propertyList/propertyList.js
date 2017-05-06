@@ -21,7 +21,9 @@ class PropertyList extends Component {
   }
 
   renderProperties() {
-    return this.state.properties.map((property, index) => {
+    const { properties } = this.state;
+    if(!properties) return;
+    return properties.map((property, index) => {
       return (
         <Property property={property} key={index}/>
       )

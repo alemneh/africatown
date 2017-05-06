@@ -26476,7 +26476,10 @@
 	  }, {
 	    key: 'renderProperties',
 	    value: function renderProperties() {
-	      return this.state.properties.map(function (property, index) {
+	      var properties = this.state.properties;
+
+	      if (!properties) return;
+	      return properties.map(function (property, index) {
 	        return _react2.default.createElement(_property2.default, { property: property, key: index });
 	      });
 	    }
@@ -38879,6 +38882,20 @@
 	                  'Submit'
 	                )
 	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
+	                'Description'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'description', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'description' })
+	              )
 	            )
 	          )
 	        )
@@ -41367,7 +41384,7 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'col-lg-10' },
-	              _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, type: 'text', className: 'form-control', id: 'inputEmail', placeholder: 'Email' })
+	              _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'username', type: 'text', className: 'form-control', id: 'inputEmail', placeholder: 'Email' })
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -41381,7 +41398,7 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'col-lg-10' },
-	              _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, type: 'password', className: 'form-control', id: 'inputPassword', placeholder: 'Password' })
+	              _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'password', type: 'password', className: 'form-control', id: 'inputPassword', placeholder: 'Password' })
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -41482,7 +41499,9 @@
 	  }, {
 	    key: 'handelSignUp',
 	    value: function handelSignUp(e) {
+	      console.log(this.state.newUser);
 	      e.preventDefault();
+
 	      _axios2.default.post(("http://localhost:3000") + '/users', this.state.newUser).then(function (res) {
 	        console.log(res);
 	        localStorage.token = res.data.token;
@@ -41501,29 +41520,26 @@
 	  }, {
 	    key: 'renderSignUpForm',
 	    value: function renderSignUpForm() {
-	      var _state = this.state,
-	          form = _state.form,
-	          handleInputChange = _state.handleInputChange,
-	          handelSignUp = _state.handelSignUp;
+	      var form = this.state.form;
 
 	      if (form == 'provider') {
-	        return _react2.default.createElement(_providerForm2.default, { handleInputChange: handleInputChange,
-	          handelSignUp: handelSignUp });
+	        return _react2.default.createElement(_providerForm2.default, { handleInputChange: this.handleInputChange,
+	          handelSignUp: this.handelSignUp });
 	      } else if (form == 'seeker') {
-	        return _react2.default.createElement(_seekerForm2.default, { handleInputChange: handleInputChange,
-	          handelSignUp: handelSignUp });
+	        return _react2.default.createElement(_seekerForm2.default, { handleInputChange: this.handleInputChange,
+	          handelSignUp: this.handelSignUp });
 	      } else {
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'col-lg-10 col-lg-offset-2' },
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.handelSelectForm, type: 'submit', value: 'seeker', className: 'btn btn-default' },
+	            { onClick: this.handelSelectForm, value: 'seeker', className: 'btn btn-default' },
 	            'Seeker'
 	          ),
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.handelSelectForm, type: 'submit', value: 'provider', className: 'btn btn-primary' },
+	            { onClick: this.handelSelectForm, value: 'provider', className: 'btn btn-primary' },
 	            'Provider'
 	          )
 	        );
@@ -41597,6 +41613,20 @@
 	          'div',
 	          { className: 'col-lg-10' },
 	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'name', type: 'text', className: 'form-control', id: 'inputName', placeholder: 'name' })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	          'Password'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'password', type: 'password', className: 'form-control', id: 'inputName', placeholder: 'password' })
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -42124,6 +42154,20 @@
 	          'div',
 	          { className: 'col-lg-10' },
 	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'name', type: 'text', className: 'form-control', id: 'inputName', placeholder: 'name' })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	          'Password'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'password', type: 'password', className: 'form-control', id: 'inputName', placeholder: 'password' })
 	        )
 	      ),
 	      _react2.default.createElement(

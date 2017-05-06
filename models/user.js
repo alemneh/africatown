@@ -46,6 +46,7 @@ module.exports = function(mongoose, models) {
   userSchema.pre('save', function(next) {
     _this = this;
     if(_this.hookEnabled) {
+      console.log(_this);
       this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10));
       next();
     } else {

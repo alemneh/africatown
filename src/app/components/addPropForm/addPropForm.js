@@ -215,6 +215,12 @@ class AddPropertyForm extends Component {
                 <button style={styles.btn} type="submit" className="btn btn-primary">Submit</button>
               </div>
             </div>
+            <div className="form-group">
+              <label for="inputState" className="col-lg-2 control-label">Description</label>
+              <div className="col-lg-10">
+                <input required onChange={ this.handleInputChange }  name="description" type="text" className="form-control" id="inputState" placeholder="description" />
+              </div>
+            </div>
           </fieldset>
         </form>
       </section>

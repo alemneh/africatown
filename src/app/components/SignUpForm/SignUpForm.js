@@ -30,7 +30,9 @@ class SignUpForm extends Component {
   }
 
   handelSignUp(e) {
+      console.log(this.state.newUser);
     e.preventDefault();
+
     axios.post(process.env.URL + '/users', this.state.newUser)
       .then((res) => {
         console.log(res);
@@ -49,18 +51,18 @@ class SignUpForm extends Component {
   }
 
   renderSignUpForm() {
-    const { form, handleInputChange, handelSignUp } = this.state;
+    const { form } = this.state;
     if(form == 'provider') {
-      return (<ProviderForm handleInputChange={handleInputChange}
-                            handelSignUp={handelSignUp}/>)
+      return (<ProviderForm handleInputChange={this.handleInputChange}
+                            handelSignUp={this.handelSignUp}/>)
     } else if (form == 'seeker') {
-      return (<SeekerForm handleInputChange={handleInputChange}
-                          handelSignUp={handelSignUp}/>)
+      return (<SeekerForm handleInputChange={this.handleInputChange}
+                          handelSignUp={this.handelSignUp}/>)
     } else {
       return (
         <div className="col-lg-10 col-lg-offset-2">
-          <button  onClick={this.handelSelectForm } type="submit" value="seeker" className="btn btn-default">Seeker</button>
-          <button  onClick={this.handelSelectForm } type="submit" value="provider" className="btn btn-primary">Provider</button>
+          <button  onClick={this.handelSelectForm }  value="seeker" className="btn btn-default">Seeker</button>
+          <button  onClick={this.handelSelectForm }  value="provider" className="btn btn-primary">Provider</button>
         </div>
       )
     }

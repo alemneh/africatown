@@ -1,15 +1,17 @@
 'use strict';
 const express        = require('express');
 const app            = express();
-const bodyParser       = require('body-parser');
-const userRouter       = express.Router();
-const propertyRouter   = express.Router();
+const bodyParser     = require('body-parser');
+const userRouter     = express.Router();
+const propertyRouter = express.Router();
+const loginRouter    = express.Router();
 const models         = require('./models');
 const compression    = require('compression');
 const env            = process.env.NODE_ENV || 'development';
 const CONFIG         = require('./config/config.json')[env];
 const port           = process.env.PORT || CONFIG.port || 3000;
 
+require('./controllers/login-controller')(loginRouter, models);
 require('./controllers/user-controller')(userRouter, models);
 require('./controllers/property-controller')(propertyRouter, models);
 
@@ -19,7 +21,7 @@ app.use(bodyParser.json());
 app.use(compression());
 app.use(express.static(__dirname + '/src'));
 
-app.use('/', userRouter, propertyRouter);
+app.use('/', userRouter, propertyRouter, loginRouter);
 
 
 app.get('*', function (request, response){

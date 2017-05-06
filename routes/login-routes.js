@@ -7,6 +7,7 @@ let LoginController = {
 
   logIn: function(req, res) {
     const authorizationArray = req.headers.authorization.split(' ');
+    console.log(authorizationArray);
     const method = authorizationArray[0];
     const base64ed = authorizationArray[1];
     const authArray = new Buffer(base64ed, 'base64').toString().split(':');

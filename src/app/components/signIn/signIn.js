@@ -64,13 +64,13 @@ class SignInForm extends Component {
           <div className="form-group">
             <label for="inputEmail" className="col-lg-2 control-label">Email</label>
             <div className="col-lg-10">
-              <input required onChange={ this.handleInputChange } type="text" className="form-control" id="inputEmail" placeholder="Email" />
+              <input required onChange={ this.handleInputChange } name="username" type="text" className="form-control" id="inputEmail" placeholder="Email" />
             </div>
           </div>
           <div className="form-group">
             <label for="inputPassword" className="col-lg-2 control-label">Password</label>
             <div className="col-lg-10">
-              <input required onChange={ this.handleInputChange } type="password" className="form-control" id="inputPassword" placeholder="Password" />
+              <input required onChange={ this.handleInputChange } name="password" type="password" className="form-control" id="inputPassword" placeholder="Password" />
             </div>
           </div>
           <div className="form-group">

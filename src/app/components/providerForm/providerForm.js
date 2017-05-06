@@ -21,6 +21,12 @@ const ProviderCompnent = ({handelSignUp, handleInputChange}) => {
           </div>
         </div>
         <div className="form-group">
+          <label for="inputName" className="col-lg-2 control-label">Password</label>
+          <div className="col-lg-10">
+            <input required onChange={ handleInputChange }  name="password" type="password" className="form-control" id="inputName" placeholder="password" />
+          </div>
+        </div>
+        <div className="form-group">
           <label for="inputName" className="col-lg-2 control-label">Organization</label>
           <div className="col-lg-10">
             <input required onChange={ handleInputChange }  name="organization" type="text" className="form-control" id="inputName" placeholder="Organization" />

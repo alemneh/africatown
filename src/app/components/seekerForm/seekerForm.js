@@ -21,6 +21,12 @@ const SeekerComponent = ({handelSignUp, handleInputChange}) => {
           </div>
         </div>
         <div className="form-group">
+          <label for="inputName" className="col-lg-2 control-label">Password</label>
+          <div className="col-lg-10">
+            <input required onChange={ handleInputChange }  name="password" type="password" className="form-control" id="inputName" placeholder="password" />
+          </div>
+        </div>
+        <div className="form-group">
           <label for="inputPhone" className="col-lg-2 control-label">Phone</label>
           <div className="col-lg-10">
             <input required onChange={ handleInputChange }  name="telephone" type="number" className="form-control" id="inputPhone" placeholder="Phone" />
