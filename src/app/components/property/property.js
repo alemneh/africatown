@@ -3,11 +3,12 @@ import Avatar from 'material-ui/Avatar';
 import { ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
-const Property = ({ property }) => {
+const Property = ({ property, viewPropertyDetails }) => {
   console.log(property.propPicUrl );
   return (
     <div>
       <ListItem
+            onClick={ () => {viewPropertyDetails(property)} }
             leftAvatar={<Avatar src={ property.propPicUrl } />}
             primaryText={ property.address }
             secondaryText={

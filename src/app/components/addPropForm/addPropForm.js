@@ -123,6 +123,12 @@ class AddPropertyForm extends Component {
               </div>
             </div>
             <div className="form-group">
+              <label for="inputState" className="col-lg-2 control-label">Manager/Owner</label>
+              <div className="col-lg-10">
+                <input required onChange={ this.handleInputChange }  name="manager" type="text" className="form-control" id="inputState" placeholder="Manager" />
+              </div>
+            </div>
+            <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Cats Allowed</label>
               <div className="col-lg-10">
                 <select required onChange={ this.handleInputChange }  name="isCatsOk" className="form-control" id="select">

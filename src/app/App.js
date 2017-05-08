@@ -9,8 +9,9 @@ class App extends Component {
   render() {
     return (
       <div style={{height: '100%'}}>
+        <img src="https://upload.wikimedia.org/wikipedia/en/b/b1/Portrait_placeholder.png" />
         <MuiThemeProvider>
-          
+
           { this.props.children }
         </MuiThemeProvider>
       </div>

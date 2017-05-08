@@ -20,12 +20,18 @@ class PropertyList extends Component {
     this.fetchProperties();
   }
 
+  viewPropertyDetails(property) {
+    console.log(property);
+    localStorage.property = JSON.stringify(property);
+    browserHistory.push("/property-details");
+  }
+
   renderProperties() {
     const { properties } = this.state;
     if(!properties) return;
     return properties.map((property, index) => {
       return (
-        <Property property={property} key={index}/>
+        <Property property={property} viewPropertyDetails={this.viewPropertyDetails} key={index}/>
       )
     });
   }

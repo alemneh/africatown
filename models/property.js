@@ -20,6 +20,7 @@ module.exports = (mongoose, models) => {
     price: Number,
     description: String,
     telephone: Number,
+    manager: String,
     city: String,
     zipCode: Number
   });
