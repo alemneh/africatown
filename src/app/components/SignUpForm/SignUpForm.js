@@ -30,10 +30,12 @@ class SignUpForm extends Component {
   }
 
   handelSignUp(e) {
-      console.log(this.state.newUser);
+      let newUser = this.state.newUser;
+      newUser.userType = this.state.form;
+      console.log(newUser);
     e.preventDefault();
 
-    axios.post(process.env.URL + '/users', this.state.newUser)
+    axios.post(process.env.URL + '/users', newUser)
       .then((res) => {
         console.log(res);
         localStorage.token = res.data.token;
@@ -59,10 +61,20 @@ class SignUpForm extends Component {
       return (<SeekerForm handleInputChange={this.handleInputChange}
                           handelSignUp={this.handelSignUp}/>)
     } else {
+      const style = {
+        container: {
+          marginTop: '150px'
+        },
+        btn: {
+          marginRight: '15px',
+          marginTop: '30px'
+        }
+      }
       return (
-        <div className="col-lg-10 col-lg-offset-2">
-          <button  onClick={this.handelSelectForm }  value="seeker" className="btn btn-default">Seeker</button>
-          <button  onClick={this.handelSelectForm }  value="provider" className="btn btn-primary">Provider</button>
+        <div style={style.container} className="col-lg-10 col-lg-offset-2 text-center">
+          <h1>Which Are You?</h1>
+          <button   style={style.btn} onClick={this.handelSelectForm }  value="seeker" className="btn btn-default">Seeker</button>
+          <button   style={style.btn} onClick={this.handelSelectForm }  value="provider" className="btn btn-primary">Provider</button>
         </div>
       )
     }

@@ -41531,10 +41531,12 @@
 	  }, {
 	    key: 'handelSignUp',
 	    value: function handelSignUp(e) {
-	      console.log(this.state.newUser);
+	      var newUser = this.state.newUser;
+	      newUser.userType = this.state.form;
+	      console.log(newUser);
 	      e.preventDefault();
 
-	      _axios2.default.post(("http://localhost:3000") + '/users', this.state.newUser).then(function (res) {
+	      _axios2.default.post(("http://localhost:3000") + '/users', newUser).then(function (res) {
 	        console.log(res);
 	        localStorage.token = res.data.token;
 	        _reactRouter.browserHistory.push('/');
@@ -41561,17 +41563,31 @@
 	        return _react2.default.createElement(_seekerForm2.default, { handleInputChange: this.handleInputChange,
 	          handelSignUp: this.handelSignUp });
 	      } else {
+	        var style = {
+	          container: {
+	            marginTop: '150px'
+	          },
+	          btn: {
+	            marginRight: '15px',
+	            marginTop: '30px'
+	          }
+	        };
 	        return _react2.default.createElement(
 	          'div',
-	          { className: 'col-lg-10 col-lg-offset-2' },
+	          { style: style.container, className: 'col-lg-10 col-lg-offset-2 text-center' },
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Which Are You?'
+	          ),
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.handelSelectForm, value: 'seeker', className: 'btn btn-default' },
+	            { style: style.btn, onClick: this.handelSelectForm, value: 'seeker', className: 'btn btn-default' },
 	            'Seeker'
 	          ),
 	          _react2.default.createElement(
 	            'button',
-	            { onClick: this.handelSelectForm, value: 'provider', className: 'btn btn-primary' },
+	            { style: style.btn, onClick: this.handelSelectForm, value: 'provider', className: 'btn btn-primary' },
 	            'Provider'
 	          )
 	        );
@@ -42414,6 +42430,8 @@
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
+	var _reactRouter = __webpack_require__(173);
+
 	var _MuiThemeProvider = __webpack_require__(440);
 
 	var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
@@ -42438,10 +42456,65 @@
 	  _createClass(App, [{
 	    key: 'render',
 	    value: function render() {
+
 	      return _react2.default.createElement(
 	        'div',
 	        { style: { height: '100%' } },
-	        _react2.default.createElement('img', { src: 'https://upload.wikimedia.org/wikipedia/en/b/b1/Portrait_placeholder.png' }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'btn-group pull-right' },
+	          _react2.default.createElement(
+	            'a',
+	            { href: '#', className: 'btn btn-info' },
+	            'Info'
+	          ),
+	          _react2.default.createElement(
+	            'a',
+	            { href: '#', className: 'btn btn-info dropdown-toggle', 'data-toggle': 'dropdown', 'aria-expanded': 'false' },
+	            _react2.default.createElement('span', { className: 'caret' })
+	          ),
+	          _react2.default.createElement(
+	            'ul',
+	            { className: 'dropdown-menu' },
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { href: '#' },
+	                'Action'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { href: '#' },
+	                'Another action'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { href: '#' },
+	                'Something else here'
+	              )
+	            ),
+	            _react2.default.createElement('li', { className: 'divider' }),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { href: '#' },
+	                'Separated link'
+	              )
+	            )
+	          )
+	        ),
 	        _react2.default.createElement(
 	          _MuiThemeProvider2.default,
 	          null,
