@@ -3,12 +3,12 @@ import Avatar from 'material-ui/Avatar';
 import { ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
-const Property = ({ property, viewPropertyDetails, isEditMode }) => {
+const PropertyEdit = ({ property, viewPropertyDetails}) => {
   console.log(property.propPicUrl );
   return (
     <div>
       <ListItem
-            onClick={ () => {viewPropertyDetails(property, isEditMode)} }
+            onClick={ () => {viewPropertyDetails(property)} }
             leftAvatar={<Avatar src={ property.propPicUrl } />}
             primaryText={ property.address }
             secondaryText={
@@ -24,4 +24,4 @@ const Property = ({ property, viewPropertyDetails, isEditMode }) => {
   )
 }
 
-export default Property;
+export default PropertyEdit;

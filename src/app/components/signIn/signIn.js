@@ -40,7 +40,9 @@ class SignInForm extends Component {
     .then((res) => {
       console.log(res);
       localStorage.token = res.data.token;
+      localStorage.user = res.data.user;
       browserHistory.push('/');
+
     })
     .catch((err) => {
       console.log(err);

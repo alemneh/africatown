@@ -65,27 +65,39 @@
 
 	var _PropertyList2 = _interopRequireDefault(_PropertyList);
 
-	var _addPropForm = __webpack_require__(416);
+	var _propertyListEdit = __webpack_require__(416);
+
+	var _propertyListEdit2 = _interopRequireDefault(_propertyListEdit);
+
+	var _addPropForm = __webpack_require__(418);
 
 	var _addPropForm2 = _interopRequireDefault(_addPropForm);
 
-	var _home = __webpack_require__(433);
+	var _home = __webpack_require__(435);
 
 	var _home2 = _interopRequireDefault(_home);
 
-	var _signin = __webpack_require__(434);
+	var _signin = __webpack_require__(436);
 
 	var _signin2 = _interopRequireDefault(_signin);
 
-	var _SignUpForm = __webpack_require__(435);
+	var _SignUpForm = __webpack_require__(437);
 
 	var _SignUpForm2 = _interopRequireDefault(_SignUpForm);
 
-	var _propertyDetails = __webpack_require__(438);
+	var _propertyDetails = __webpack_require__(440);
 
 	var _propertyDetails2 = _interopRequireDefault(_propertyDetails);
 
-	var _App = __webpack_require__(439);
+	var _propertyDetailsEdit = __webpack_require__(441);
+
+	var _propertyDetailsEdit2 = _interopRequireDefault(_propertyDetailsEdit);
+
+	var _propFormEdit = __webpack_require__(488);
+
+	var _propFormEdit2 = _interopRequireDefault(_propFormEdit);
+
+	var _App = __webpack_require__(442);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -96,7 +108,10 @@
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _home2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/properties-list', component: _PropertyList2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/properties-edit', component: _propertyListEdit2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/property-details', component: _propertyDetails2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/property-edit', component: _propertyDetailsEdit2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/property-edit-form', component: _propFormEdit2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/add-property', component: _addPropForm2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/signin-form', component: _signin2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/signup-form', component: _SignUpForm2.default })
@@ -26466,7 +26481,8 @@
 	    var _this = _possibleConstructorReturn(this, (PropertyList.__proto__ || Object.getPrototypeOf(PropertyList)).call(this, props));
 
 	    _this.state = {
-	      properties: []
+	      properties: [],
+	      isEditMode: false
 	    };
 	    return _this;
 	  }
@@ -26581,7 +26597,8 @@
 
 	var Property = function Property(_ref) {
 	  var property = _ref.property,
-	      viewPropertyDetails = _ref.viewPropertyDetails;
+	      viewPropertyDetails = _ref.viewPropertyDetails,
+	      isEditMode = _ref.isEditMode;
 
 	  console.log(property.propPicUrl);
 	  return _react2.default.createElement(
@@ -26589,7 +26606,7 @@
 	    null,
 	    _react2.default.createElement(_List.ListItem, {
 	      onClick: function onClick() {
-	        viewPropertyDetails(property);
+	        viewPropertyDetails(property, isEditMode);
 	      },
 	      leftAvatar: _react2.default.createElement(_Avatar2.default, { src: property.propPicUrl }),
 	      primaryText: property.address,
@@ -38330,21 +38347,217 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _propertyEdit = __webpack_require__(417);
+
+	var _propertyEdit2 = _interopRequireDefault(_propertyEdit);
+
+	var _List = __webpack_require__(330);
+
+	var _reactRouter = __webpack_require__(173);
+
+	var _Subheader = __webpack_require__(332);
+
+	var _Subheader2 = _interopRequireDefault(_Subheader);
+
+	var _axios = __webpack_require__(387);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var PropertyListEdit = function (_Component) {
+	  _inherits(PropertyListEdit, _Component);
+
+	  function PropertyListEdit(props) {
+	    _classCallCheck(this, PropertyListEdit);
+
+	    var _this = _possibleConstructorReturn(this, (PropertyListEdit.__proto__ || Object.getPrototypeOf(PropertyListEdit)).call(this, props));
+
+	    _this.state = {
+	      properties: [],
+	      isEditMode: false
+	    };
+	    return _this;
+	  }
+
+	  _createClass(PropertyListEdit, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var token = localStorage.getItem('token');
+	      if (!token) _reactRouter.browserHistory.push('/signin-form');
+	      this.fetchProperties();
+	    }
+	  }, {
+	    key: 'viewPropertyDetails',
+	    value: function viewPropertyDetails(property) {
+	      console.log(property);
+	      localStorage.property = JSON.stringify(property);
+	      _reactRouter.browserHistory.push("/property-edit");
+	    }
+	  }, {
+	    key: 'renderProperties',
+	    value: function renderProperties() {
+	      var _this2 = this;
+
+	      var properties = this.state.properties;
+
+	      if (!properties) return;
+	      return properties.map(function (property, index) {
+	        return _react2.default.createElement(_propertyEdit2.default, { property: property, viewPropertyDetails: _this2.viewPropertyDetails, key: index });
+	      });
+	    }
+	  }, {
+	    key: 'fetchProperties',
+	    value: function fetchProperties() {
+	      var _this3 = this;
+
+	      _axios2.default.get(("http://localhost:3000") + '/properties').then(function (res) {
+	        console.log(res.data.properties);
+	        _this3.setState({ properties: res.data.properties });
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var styles = {
+	        root: {
+	          marginBottom: 24,
+	          marginRight: 24,
+	          maxWidth: 360,
+	          width: '100%'
+	        },
+	        container: {
+	          width: '960px',
+	          margin: '0 auto'
+	        },
+	        bottomTear: {
+	          display: 'block',
+	          position: 'relative',
+	          marginTop: -10,
+	          maxWidth: 360
+	        }
+	      };
+
+	      return _react2.default.createElement(
+	        'section',
+	        { style: styles.container },
+	        _react2.default.createElement(
+	          _List.List,
+	          null,
+	          _react2.default.createElement(
+	            _Subheader2.default,
+	            null,
+	            'Today'
+	          ),
+	          this.renderProperties()
+	        )
+	      );
+	    }
+	  }]);
+
+	  return PropertyListEdit;
+	}(_react.Component);
+
+	exports.default = PropertyListEdit;
+
+/***/ }),
+/* 417 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Avatar = __webpack_require__(230);
+
+	var _Avatar2 = _interopRequireDefault(_Avatar);
+
+	var _List = __webpack_require__(330);
+
 	var _Divider = __webpack_require__(385);
 
 	var _Divider2 = _interopRequireDefault(_Divider);
 
-	var _Paper = __webpack_require__(417);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PropertyEdit = function PropertyEdit(_ref) {
+	  var property = _ref.property,
+	      viewPropertyDetails = _ref.viewPropertyDetails;
+
+	  console.log(property.propPicUrl);
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(_List.ListItem, {
+	      onClick: function onClick() {
+	        viewPropertyDetails(property);
+	      },
+	      leftAvatar: _react2.default.createElement(_Avatar2.default, { src: property.propPicUrl }),
+	      primaryText: property.address,
+	      secondaryText: _react2.default.createElement(
+	        'p',
+	        null,
+	        _react2.default.createElement(
+	          'span',
+	          { style: { color: 'Black' } },
+	          property.price
+	        ),
+	        ' --',
+	        property.description
+	      ),
+	      secondaryTextLines: 2
+	    }),
+	    _react2.default.createElement(_Divider2.default, { inset: true })
+	  );
+	};
+
+	exports.default = PropertyEdit;
+
+/***/ }),
+/* 418 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Divider = __webpack_require__(385);
+
+	var _Divider2 = _interopRequireDefault(_Divider);
+
+	var _Paper = __webpack_require__(419);
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
 	var _reactRouter = __webpack_require__(173);
 
-	var _TextField = __webpack_require__(419);
+	var _TextField = __webpack_require__(421);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
-	var _RaisedButton = __webpack_require__(431);
+	var _RaisedButton = __webpack_require__(433);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -38566,20 +38779,6 @@
 	              _react2.default.createElement(
 	                'label',
 	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
-	                'State'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'state', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'State' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
 	                'Manager/Owner'
 	              ),
 	              _react2.default.createElement(
@@ -38602,6 +38801,38 @@
 	                _react2.default.createElement(
 	                  'select',
 	                  { required: true, onChange: this.handleInputChange, name: 'isCatsOk', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: '' },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'false' },
+	                    'No'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'true' },
+	                    'Yes'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Dogs Allowed'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'isDogsOk', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
@@ -38901,6 +39132,20 @@
 	              'div',
 	              { className: 'form-group' },
 	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
+	                'Description'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'description', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'description' })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
 	                'div',
 	                { className: 'col-lg-10 col-lg-offset-2' },
 	                _react2.default.createElement(
@@ -38913,20 +39158,6 @@
 	                  { style: styles.btn, type: 'submit', className: 'btn btn-primary' },
 	                  'Submit'
 	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
-	                'Description'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'description', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'description' })
 	              )
 	            )
 	          )
@@ -38941,7 +39172,7 @@
 	exports.default = AddPropertyForm;
 
 /***/ }),
-/* 417 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38951,7 +39182,7 @@
 	});
 	exports.default = undefined;
 
-	var _Paper = __webpack_require__(418);
+	var _Paper = __webpack_require__(420);
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
@@ -38960,7 +39191,7 @@
 	exports.default = _Paper2.default;
 
 /***/ }),
-/* 418 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39116,7 +39347,7 @@
 	exports.default = Paper;
 
 /***/ }),
-/* 419 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39126,7 +39357,7 @@
 	});
 	exports.default = undefined;
 
-	var _TextField = __webpack_require__(420);
+	var _TextField = __webpack_require__(422);
 
 	var _TextField2 = _interopRequireDefault(_TextField);
 
@@ -39135,7 +39366,7 @@
 	exports.default = _TextField2.default;
 
 /***/ }),
-/* 420 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39196,19 +39427,19 @@
 
 	var _transitions2 = _interopRequireDefault(_transitions);
 
-	var _EnhancedTextarea = __webpack_require__(421);
+	var _EnhancedTextarea = __webpack_require__(423);
 
 	var _EnhancedTextarea2 = _interopRequireDefault(_EnhancedTextarea);
 
-	var _TextFieldHint = __webpack_require__(428);
+	var _TextFieldHint = __webpack_require__(430);
 
 	var _TextFieldHint2 = _interopRequireDefault(_TextFieldHint);
 
-	var _TextFieldLabel = __webpack_require__(429);
+	var _TextFieldLabel = __webpack_require__(431);
 
 	var _TextFieldLabel2 = _interopRequireDefault(_TextFieldLabel);
 
-	var _TextFieldUnderline = __webpack_require__(430);
+	var _TextFieldUnderline = __webpack_require__(432);
 
 	var _TextFieldUnderline2 = _interopRequireDefault(_TextFieldUnderline);
 
@@ -39722,7 +39953,7 @@
 	exports.default = TextField;
 
 /***/ }),
-/* 421 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39771,7 +40002,7 @@
 
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 
-	var _reactEventListener = __webpack_require__(422);
+	var _reactEventListener = __webpack_require__(424);
 
 	var _reactEventListener2 = _interopRequireDefault(_reactEventListener);
 
@@ -39976,7 +40207,7 @@
 	exports.default = EnhancedTextarea;
 
 /***/ }),
-/* 422 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40009,7 +40240,7 @@
 
 	var _typeof3 = _interopRequireDefault(_typeof2);
 
-	var _keys = __webpack_require__(423);
+	var _keys = __webpack_require__(425);
 
 	var _keys2 = _interopRequireDefault(_keys);
 
@@ -40039,7 +40270,7 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _supports = __webpack_require__(426);
+	var _supports = __webpack_require__(428);
 
 	var supports = _interopRequireWildcard(_supports);
 
@@ -40205,20 +40436,20 @@
 	exports.default = EventListener;
 
 /***/ }),
-/* 423 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(424), __esModule: true };
+	module.exports = { "default": __webpack_require__(426), __esModule: true };
 
 /***/ }),
-/* 424 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(425);
+	__webpack_require__(427);
 	module.exports = __webpack_require__(238).Object.keys;
 
 /***/ }),
-/* 425 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 19.1.2.14 Object.keys(O)
@@ -40232,7 +40463,7 @@
 	});
 
 /***/ }),
-/* 426 */
+/* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40242,7 +40473,7 @@
 	});
 	exports.passiveOption = exports.detachEvent = exports.attachEvent = exports.removeEventListener = exports.addEventListener = exports.canUseDOM = undefined;
 
-	var _defineProperty = __webpack_require__(427);
+	var _defineProperty = __webpack_require__(429);
 
 	var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -40285,7 +40516,7 @@
 	}();
 
 /***/ }),
-/* 427 */
+/* 429 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -40309,7 +40540,7 @@
 	}
 
 /***/ }),
-/* 428 */
+/* 430 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40394,7 +40625,7 @@
 	exports.default = TextFieldHint;
 
 /***/ }),
-/* 429 */
+/* 431 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40516,7 +40747,7 @@
 	exports.default = TextFieldLabel;
 
 /***/ }),
-/* 430 */
+/* 432 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40657,7 +40888,7 @@
 	exports.default = TextFieldUnderline;
 
 /***/ }),
-/* 431 */
+/* 433 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40667,7 +40898,7 @@
 	});
 	exports.default = undefined;
 
-	var _RaisedButton = __webpack_require__(432);
+	var _RaisedButton = __webpack_require__(434);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -40676,7 +40907,7 @@
 	exports.default = _RaisedButton2.default;
 
 /***/ }),
-/* 432 */
+/* 434 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40737,7 +40968,7 @@
 
 	var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
 
-	var _Paper = __webpack_require__(417);
+	var _Paper = __webpack_require__(419);
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
@@ -41177,7 +41408,7 @@
 	exports.default = RaisedButton;
 
 /***/ }),
-/* 433 */
+/* 435 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41194,7 +41425,7 @@
 
 	var _reactRouter = __webpack_require__(173);
 
-	var _RaisedButton = __webpack_require__(431);
+	var _RaisedButton = __webpack_require__(433);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
@@ -41299,7 +41530,7 @@
 	exports.default = Home;
 
 /***/ }),
-/* 434 */
+/* 436 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41377,6 +41608,7 @@
 	      }).then(function (res) {
 	        console.log(res);
 	        localStorage.token = res.data.token;
+	        localStorage.user = res.data.user;
 	        _reactRouter.browserHistory.push('/');
 	      }).catch(function (err) {
 	        console.log(err);
@@ -41462,7 +41694,7 @@
 	exports.default = SignInForm;
 
 /***/ }),
-/* 435 */
+/* 437 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41483,11 +41715,11 @@
 
 	var _axios2 = _interopRequireDefault(_axios);
 
-	var _seekerForm = __webpack_require__(436);
+	var _seekerForm = __webpack_require__(438);
 
 	var _seekerForm2 = _interopRequireDefault(_seekerForm);
 
-	var _providerForm = __webpack_require__(437);
+	var _providerForm = __webpack_require__(439);
 
 	var _providerForm2 = _interopRequireDefault(_providerForm);
 
@@ -41610,7 +41842,7 @@
 	exports.default = SignUpForm;
 
 /***/ }),
-/* 436 */
+/* 438 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42151,7 +42383,7 @@
 	exports.default = SeekerComponent;
 
 /***/ }),
-/* 437 */
+/* 439 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42341,7 +42573,7 @@
 	exports.default = ProviderCompnent;
 
 /***/ }),
-/* 438 */
+/* 440 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42370,31 +42602,100 @@
 	    _react2.default.createElement(
 	      'h1',
 	      null,
-	      'Address: ',
-	      property.address
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Address:'
+	      ),
+	      ' ',
+	      property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode
 	    ),
 	    _react2.default.createElement(
 	      'h3',
 	      null,
-	      'Rent: ',
-	      property.price
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Rent:'
+	      ),
+	      ' ',
+	      '$' + property.price
 	    ),
 	    _react2.default.createElement(
 	      'h3',
 	      null,
-	      'Manager/Owner: ',
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Square Feet:'
+	      ),
+	      ' ',
+	      property.sqft + 'ft'
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Manager/Owner:'
+	      ),
+	      ' ',
 	      property.manager
 	    ),
 	    _react2.default.createElement(
 	      'h3',
 	      null,
-	      'Phone: ',
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Phone:'
+	      ),
+	      ' ',
 	      property.telephone
 	    ),
 	    _react2.default.createElement(
 	      'h3',
 	      null,
-	      'Description: '
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Bedrooms:'
+	      ),
+	      ' ',
+	      property.numOfBedrms
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Bathrooms:'
+	      ),
+	      ' ',
+	      property.numOfBathrms
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'House Type:'
+	      ),
+	      ' ',
+	      property.houseType
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Description:'
+	      ),
+	      ' '
 	    ),
 	    _react2.default.createElement(
 	      'p',
@@ -42404,14 +42705,335 @@
 	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
 	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
 	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' })
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement(
+	      'ul',
+	      { style: styles.img },
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Cats Ok:'
+	        ),
+	        ' ',
+	        property.isCatsOk ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Dogs Ok:'
+	        ),
+	        ' ',
+	        property.isDogsOk ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Smoking Ok:'
+	        ),
+	        ' ',
+	        property.smoking ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Furnished:'
+	        ),
+	        ' ',
+	        property.furnished ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Wheel Chair Access:'
+	        ),
+	        ' ',
+	        property.wheelChairAccess ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Laundry:'
+	        ),
+	        ' ',
+	        property.laundry
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Parking:'
+	        ),
+	        ' ',
+	        property.parking
+	      )
+	    )
 	  );
 	};
 
 	exports.default = propertyDetails;
 
 /***/ }),
-/* 439 */
+/* 441 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(173);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var propertyDetailsEdit = function propertyDetailsEdit() {
+	  var property = JSON.parse(localStorage.property);
+
+	  var editForm = function editForm() {
+	    _reactRouter.browserHistory.push('/property-edit-form');
+	  };
+	  var styles = {
+	    img: {
+	      margin: '10px'
+	    }
+	  };
+
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'h1',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Address:'
+	      ),
+	      ' ',
+	      property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Rent:'
+	      ),
+	      ' ',
+	      '$' + property.price
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Square Feet:'
+	      ),
+	      ' ',
+	      property.sqft + 'ft'
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Manager/Owner:'
+	      ),
+	      ' ',
+	      property.manager
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Phone:'
+	      ),
+	      ' ',
+	      property.telephone
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Bedrooms:'
+	      ),
+	      ' ',
+	      property.numOfBedrms
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Bathrooms:'
+	      ),
+	      ' ',
+	      property.numOfBathrms
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'House Type:'
+	      ),
+	      ' ',
+	      property.houseType
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Description:'
+	      ),
+	      ' '
+	    ),
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      property.description
+	    ),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement(
+	      'ul',
+	      { style: styles.img },
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Cats Ok:'
+	        ),
+	        ' ',
+	        property.isCatsOk ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Dogs Ok:'
+	        ),
+	        ' ',
+	        property.isDogsOk ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Smoking Ok:'
+	        ),
+	        ' ',
+	        property.smoking ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Furnished:'
+	        ),
+	        ' ',
+	        property.furnished ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Wheel Chair Access:'
+	        ),
+	        ' ',
+	        property.wheelChairAccess ? 'Yes' : 'No'
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Laundry:'
+	        ),
+	        ' ',
+	        property.laundry
+	      ),
+	      _react2.default.createElement(
+	        'li',
+	        null,
+	        _react2.default.createElement(
+	          'b',
+	          null,
+	          'Parking:'
+	        ),
+	        ' ',
+	        property.parking
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'a',
+	        { onClick: editForm, style: styles.img, href: '#', className: 'btn btn-warning' },
+	        'Edit'
+	      ),
+	      _react2.default.createElement(
+	        'a',
+	        { style: styles.img, href: '#', className: 'btn btn-danger' },
+	        'Delete'
+	      )
+	    )
+	  );
+	};
+
+	exports.default = propertyDetailsEdit;
+
+/***/ }),
+/* 442 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42426,13 +43048,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _RaisedButton = __webpack_require__(431);
+	var _RaisedButton = __webpack_require__(433);
 
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
 	var _reactRouter = __webpack_require__(173);
 
-	var _MuiThemeProvider = __webpack_require__(440);
+	var _menu = __webpack_require__(443);
+
+	var _menu2 = _interopRequireDefault(_menu);
+
+	var _MuiThemeProvider = __webpack_require__(444);
 
 	var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
 
@@ -42454,67 +43080,21 @@
 	  }
 
 	  _createClass(App, [{
+	    key: 'renderNav',
+	    value: function renderNav() {
+	      if (localStorage.token) {
+	        return _react2.default.createElement(_menu2.default, null);
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-
+	      console.log('token: ' + localStorage.token);
+	      console.log(Boolean(localStorage.token));
 	      return _react2.default.createElement(
 	        'div',
 	        { style: { height: '100%' } },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'btn-group pull-right' },
-	          _react2.default.createElement(
-	            'a',
-	            { href: '#', className: 'btn btn-info' },
-	            'Info'
-	          ),
-	          _react2.default.createElement(
-	            'a',
-	            { href: '#', className: 'btn btn-info dropdown-toggle', 'data-toggle': 'dropdown', 'aria-expanded': 'false' },
-	            _react2.default.createElement('span', { className: 'caret' })
-	          ),
-	          _react2.default.createElement(
-	            'ul',
-	            { className: 'dropdown-menu' },
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                { href: '#' },
-	                'Action'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                { href: '#' },
-	                'Another action'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                { href: '#' },
-	                'Something else here'
-	              )
-	            ),
-	            _react2.default.createElement('li', { className: 'divider' }),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                { href: '#' },
-	                'Separated link'
-	              )
-	            )
-	          )
-	        ),
+	        this.renderNav(),
 	        _react2.default.createElement(
 	          _MuiThemeProvider2.default,
 	          null,
@@ -42532,7 +43112,76 @@
 	exports.default = App;
 
 /***/ }),
-/* 440 */
+/* 443 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(173);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MenuComponent = function MenuComponent() {
+	  var logout = function logout() {
+	    localStorage.clear();
+	    _reactRouter.browserHistory.push('/');
+	  };
+
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'btn-group pull-right' },
+	      _react2.default.createElement(
+	        'a',
+	        { href: '#', className: 'btn btn-info' },
+	        'Settings'
+	      ),
+	      _react2.default.createElement(
+	        'a',
+	        { href: '#', className: 'btn btn-info dropdown-toggle', 'data-toggle': 'dropdown', 'aria-expanded': 'false' },
+	        _react2.default.createElement('span', { className: 'caret' })
+	      ),
+	      _react2.default.createElement(
+	        'ul',
+	        { className: 'dropdown-menu' },
+	        _react2.default.createElement(
+	          'li',
+	          null,
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/properties-edit' },
+	            'Properties'
+	          )
+	        ),
+	        _react2.default.createElement('li', { className: 'divider' }),
+	        _react2.default.createElement(
+	          'li',
+	          { onClick: logout },
+	          _react2.default.createElement(
+	            'a',
+	            { href: '' },
+	            'Sign Out'
+	          )
+	        )
+	      )
+	    )
+	  );
+	};
+
+	exports.default = MenuComponent;
+
+/***/ }),
+/* 444 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42567,7 +43216,7 @@
 
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 
-	var _getMuiTheme = __webpack_require__(441);
+	var _getMuiTheme = __webpack_require__(445);
 
 	var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
 
@@ -42607,7 +43256,7 @@
 	exports.default = MuiThemeProvider;
 
 /***/ }),
-/* 441 */
+/* 445 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42622,41 +43271,41 @@
 
 	exports.default = getMuiTheme;
 
-	var _lodash = __webpack_require__(442);
+	var _lodash = __webpack_require__(446);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
 	var _colorManipulator = __webpack_require__(336);
 
-	var _lightBaseTheme = __webpack_require__(444);
+	var _lightBaseTheme = __webpack_require__(448);
 
 	var _lightBaseTheme2 = _interopRequireDefault(_lightBaseTheme);
 
-	var _zIndex = __webpack_require__(447);
+	var _zIndex = __webpack_require__(451);
 
 	var _zIndex2 = _interopRequireDefault(_zIndex);
 
-	var _autoprefixer = __webpack_require__(448);
+	var _autoprefixer = __webpack_require__(452);
 
 	var _autoprefixer2 = _interopRequireDefault(_autoprefixer);
 
-	var _callOnce = __webpack_require__(480);
+	var _callOnce = __webpack_require__(484);
 
 	var _callOnce2 = _interopRequireDefault(_callOnce);
 
-	var _rtl = __webpack_require__(481);
+	var _rtl = __webpack_require__(485);
 
 	var _rtl2 = _interopRequireDefault(_rtl);
 
-	var _compose = __webpack_require__(482);
+	var _compose = __webpack_require__(486);
 
 	var _compose2 = _interopRequireDefault(_compose);
 
-	var _typography = __webpack_require__(483);
+	var _typography = __webpack_require__(487);
 
 	var _typography2 = _interopRequireDefault(_typography);
 
-	var _colors = __webpack_require__(445);
+	var _colors = __webpack_require__(449);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42991,7 +43640,7 @@
 	}
 
 /***/ }),
-/* 442 */
+/* 446 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -45202,10 +45851,10 @@
 
 	module.exports = merge;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(443)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(447)(module)))
 
 /***/ }),
-/* 443 */
+/* 447 */
 /***/ (function(module, exports) {
 
 	module.exports = function(module) {
@@ -45221,7 +45870,7 @@
 
 
 /***/ }),
-/* 444 */
+/* 448 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45230,11 +45879,11 @@
 	  value: true
 	});
 
-	var _colors = __webpack_require__(445);
+	var _colors = __webpack_require__(449);
 
 	var _colorManipulator = __webpack_require__(336);
 
-	var _spacing = __webpack_require__(446);
+	var _spacing = __webpack_require__(450);
 
 	var _spacing2 = _interopRequireDefault(_spacing);
 
@@ -45271,7 +45920,7 @@
 	    */
 
 /***/ }),
-/* 445 */
+/* 449 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -45566,7 +46215,7 @@
 	var lightWhite = exports.lightWhite = 'rgba(255, 255, 255, 0.54)';
 
 /***/ }),
-/* 446 */
+/* 450 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -45590,7 +46239,7 @@
 	};
 
 /***/ }),
-/* 447 */
+/* 451 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -45612,7 +46261,7 @@
 	};
 
 /***/ }),
-/* 448 */
+/* 452 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45671,19 +46320,19 @@
 	  }
 	};
 
-	var _createPrefixer = __webpack_require__(449);
+	var _createPrefixer = __webpack_require__(453);
 
 	var _createPrefixer2 = _interopRequireDefault(_createPrefixer);
 
-	var _createPrefixer3 = __webpack_require__(455);
+	var _createPrefixer3 = __webpack_require__(459);
 
 	var _createPrefixer4 = _interopRequireDefault(_createPrefixer3);
 
-	var _autoprefixerDynamic = __webpack_require__(460);
+	var _autoprefixerDynamic = __webpack_require__(464);
 
 	var _autoprefixerDynamic2 = _interopRequireDefault(_autoprefixerDynamic);
 
-	var _autoprefixerStatic = __webpack_require__(471);
+	var _autoprefixerStatic = __webpack_require__(475);
 
 	var _autoprefixerStatic2 = _interopRequireDefault(_autoprefixerStatic);
 
@@ -45696,7 +46345,7 @@
 	var hasWarnedAboutUserAgent = false;
 
 /***/ }),
-/* 449 */
+/* 453 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45706,19 +46355,19 @@
 	});
 	exports.default = createPrefixer;
 
-	var _prefixProperty = __webpack_require__(450);
+	var _prefixProperty = __webpack_require__(454);
 
 	var _prefixProperty2 = _interopRequireDefault(_prefixProperty);
 
-	var _prefixValue = __webpack_require__(452);
+	var _prefixValue = __webpack_require__(456);
 
 	var _prefixValue2 = _interopRequireDefault(_prefixValue);
 
-	var _addNewValuesOnly = __webpack_require__(453);
+	var _addNewValuesOnly = __webpack_require__(457);
 
 	var _addNewValuesOnly2 = _interopRequireDefault(_addNewValuesOnly);
 
-	var _isObject = __webpack_require__(454);
+	var _isObject = __webpack_require__(458);
 
 	var _isObject2 = _interopRequireDefault(_isObject);
 
@@ -45770,7 +46419,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 450 */
+/* 454 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45780,7 +46429,7 @@
 	});
 	exports.default = prefixProperty;
 
-	var _capitalizeString = __webpack_require__(451);
+	var _capitalizeString = __webpack_require__(455);
 
 	var _capitalizeString2 = _interopRequireDefault(_capitalizeString);
 
@@ -45797,7 +46446,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 451 */
+/* 455 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -45812,7 +46461,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 452 */
+/* 456 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -45835,7 +46484,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 453 */
+/* 457 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -45862,7 +46511,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 454 */
+/* 458 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -45877,7 +46526,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 455 */
+/* 459 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45890,27 +46539,27 @@
 
 	exports.default = createPrefixer;
 
-	var _getBrowserInformation = __webpack_require__(456);
+	var _getBrowserInformation = __webpack_require__(460);
 
 	var _getBrowserInformation2 = _interopRequireDefault(_getBrowserInformation);
 
-	var _getPrefixedKeyframes = __webpack_require__(459);
+	var _getPrefixedKeyframes = __webpack_require__(463);
 
 	var _getPrefixedKeyframes2 = _interopRequireDefault(_getPrefixedKeyframes);
 
-	var _capitalizeString = __webpack_require__(451);
+	var _capitalizeString = __webpack_require__(455);
 
 	var _capitalizeString2 = _interopRequireDefault(_capitalizeString);
 
-	var _addNewValuesOnly = __webpack_require__(453);
+	var _addNewValuesOnly = __webpack_require__(457);
 
 	var _addNewValuesOnly2 = _interopRequireDefault(_addNewValuesOnly);
 
-	var _isObject = __webpack_require__(454);
+	var _isObject = __webpack_require__(458);
 
 	var _isObject2 = _interopRequireDefault(_isObject);
 
-	var _prefixValue = __webpack_require__(452);
+	var _prefixValue = __webpack_require__(456);
 
 	var _prefixValue2 = _interopRequireDefault(_prefixValue);
 
@@ -46057,7 +46706,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 456 */
+/* 460 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46067,7 +46716,7 @@
 	});
 	exports.default = getBrowserInformation;
 
-	var _bowser = __webpack_require__(457);
+	var _bowser = __webpack_require__(461);
 
 	var _bowser2 = _interopRequireDefault(_bowser);
 
@@ -46189,7 +46838,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 457 */
+/* 461 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*!
@@ -46200,7 +46849,7 @@
 
 	!function (root, name, definition) {
 	  if (typeof module != 'undefined' && module.exports) module.exports = definition()
-	  else if (true) __webpack_require__(458)(name, definition)
+	  else if (true) __webpack_require__(462)(name, definition)
 	  else root[name] = definition()
 	}(this, 'bowser', function () {
 	  /**
@@ -46775,14 +47424,14 @@
 
 
 /***/ }),
-/* 458 */
+/* 462 */
 /***/ (function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ }),
-/* 459 */
+/* 463 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -46802,7 +47451,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 460 */
+/* 464 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46811,31 +47460,31 @@
 	  value: true
 	});
 
-	var _calc = __webpack_require__(461);
+	var _calc = __webpack_require__(465);
 
 	var _calc2 = _interopRequireDefault(_calc);
 
-	var _flex = __webpack_require__(463);
+	var _flex = __webpack_require__(467);
 
 	var _flex2 = _interopRequireDefault(_flex);
 
-	var _flexboxIE = __webpack_require__(464);
+	var _flexboxIE = __webpack_require__(468);
 
 	var _flexboxIE2 = _interopRequireDefault(_flexboxIE);
 
-	var _flexboxOld = __webpack_require__(465);
+	var _flexboxOld = __webpack_require__(469);
 
 	var _flexboxOld2 = _interopRequireDefault(_flexboxOld);
 
-	var _gradient = __webpack_require__(466);
+	var _gradient = __webpack_require__(470);
 
 	var _gradient2 = _interopRequireDefault(_gradient);
 
-	var _sizing = __webpack_require__(467);
+	var _sizing = __webpack_require__(471);
 
 	var _sizing2 = _interopRequireDefault(_sizing);
 
-	var _transition = __webpack_require__(468);
+	var _transition = __webpack_require__(472);
 
 	var _transition2 = _interopRequireDefault(_transition);
 
@@ -46847,7 +47496,7 @@
 	}; /* eslint-disable */
 
 /***/ }),
-/* 461 */
+/* 465 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46857,7 +47506,7 @@
 	});
 	exports.default = calc;
 
-	var _getPrefixedValue = __webpack_require__(462);
+	var _getPrefixedValue = __webpack_require__(466);
 
 	var _getPrefixedValue2 = _interopRequireDefault(_getPrefixedValue);
 
@@ -46876,7 +47525,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 462 */
+/* 466 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -46894,7 +47543,7 @@
 	module.exports = exports["default"];
 
 /***/ }),
-/* 463 */
+/* 467 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46904,7 +47553,7 @@
 	});
 	exports.default = flex;
 
-	var _getPrefixedValue = __webpack_require__(462);
+	var _getPrefixedValue = __webpack_require__(466);
 
 	var _getPrefixedValue2 = _interopRequireDefault(_getPrefixedValue);
 
@@ -46927,7 +47576,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 464 */
+/* 468 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46937,7 +47586,7 @@
 	});
 	exports.default = flexboxIE;
 
-	var _getPrefixedValue = __webpack_require__(462);
+	var _getPrefixedValue = __webpack_require__(466);
 
 	var _getPrefixedValue2 = _interopRequireDefault(_getPrefixedValue);
 
@@ -46987,7 +47636,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 465 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -46997,7 +47646,7 @@
 	});
 	exports.default = flexboxOld;
 
-	var _getPrefixedValue = __webpack_require__(462);
+	var _getPrefixedValue = __webpack_require__(466);
 
 	var _getPrefixedValue2 = _interopRequireDefault(_getPrefixedValue);
 
@@ -47060,7 +47709,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 466 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47070,7 +47719,7 @@
 	});
 	exports.default = gradient;
 
-	var _getPrefixedValue = __webpack_require__(462);
+	var _getPrefixedValue = __webpack_require__(466);
 
 	var _getPrefixedValue2 = _interopRequireDefault(_getPrefixedValue);
 
@@ -47090,7 +47739,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 467 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47100,7 +47749,7 @@
 	});
 	exports.default = sizing;
 
-	var _getPrefixedValue = __webpack_require__(462);
+	var _getPrefixedValue = __webpack_require__(466);
 
 	var _getPrefixedValue2 = _interopRequireDefault(_getPrefixedValue);
 
@@ -47138,7 +47787,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 468 */
+/* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47151,7 +47800,7 @@
 
 	exports.default = transition;
 
-	var _hyphenateProperty = __webpack_require__(469);
+	var _hyphenateProperty = __webpack_require__(473);
 
 	var _hyphenateProperty2 = _interopRequireDefault(_hyphenateProperty);
 
@@ -47204,7 +47853,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 469 */
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47214,7 +47863,7 @@
 	});
 	exports.default = hyphenateProperty;
 
-	var _hyphenateStyleName = __webpack_require__(470);
+	var _hyphenateStyleName = __webpack_require__(474);
 
 	var _hyphenateStyleName2 = _interopRequireDefault(_hyphenateStyleName);
 
@@ -47226,7 +47875,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 470 */
+/* 474 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -47248,7 +47897,7 @@
 
 
 /***/ }),
-/* 471 */
+/* 475 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47257,31 +47906,31 @@
 	  value: true
 	});
 
-	var _calc = __webpack_require__(472);
+	var _calc = __webpack_require__(476);
 
 	var _calc2 = _interopRequireDefault(_calc);
 
-	var _flex = __webpack_require__(474);
+	var _flex = __webpack_require__(478);
 
 	var _flex2 = _interopRequireDefault(_flex);
 
-	var _flexboxIE = __webpack_require__(475);
+	var _flexboxIE = __webpack_require__(479);
 
 	var _flexboxIE2 = _interopRequireDefault(_flexboxIE);
 
-	var _flexboxOld = __webpack_require__(476);
+	var _flexboxOld = __webpack_require__(480);
 
 	var _flexboxOld2 = _interopRequireDefault(_flexboxOld);
 
-	var _gradient = __webpack_require__(477);
+	var _gradient = __webpack_require__(481);
 
 	var _gradient2 = _interopRequireDefault(_gradient);
 
-	var _sizing = __webpack_require__(478);
+	var _sizing = __webpack_require__(482);
 
 	var _sizing2 = _interopRequireDefault(_sizing);
 
-	var _transition = __webpack_require__(479);
+	var _transition = __webpack_require__(483);
 
 	var _transition2 = _interopRequireDefault(_transition);
 
@@ -47293,7 +47942,7 @@
 	}; /* eslint-disable */
 
 /***/ }),
-/* 472 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47303,7 +47952,7 @@
 	});
 	exports.default = calc;
 
-	var _isPrefixedValue = __webpack_require__(473);
+	var _isPrefixedValue = __webpack_require__(477);
 
 	var _isPrefixedValue2 = _interopRequireDefault(_isPrefixedValue);
 
@@ -47320,7 +47969,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 473 */
+/* 477 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -47338,7 +47987,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 474 */
+/* 478 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -47360,7 +48009,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 475 */
+/* 479 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -47394,7 +48043,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 476 */
+/* 480 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -47438,7 +48087,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 477 */
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47448,7 +48097,7 @@
 	});
 	exports.default = gradient;
 
-	var _isPrefixedValue = __webpack_require__(473);
+	var _isPrefixedValue = __webpack_require__(477);
 
 	var _isPrefixedValue2 = _interopRequireDefault(_isPrefixedValue);
 
@@ -47468,7 +48117,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 478 */
+/* 482 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -47506,7 +48155,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 479 */
+/* 483 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47516,15 +48165,15 @@
 	});
 	exports.default = transition;
 
-	var _hyphenateProperty = __webpack_require__(469);
+	var _hyphenateProperty = __webpack_require__(473);
 
 	var _hyphenateProperty2 = _interopRequireDefault(_hyphenateProperty);
 
-	var _isPrefixedValue = __webpack_require__(473);
+	var _isPrefixedValue = __webpack_require__(477);
 
 	var _isPrefixedValue2 = _interopRequireDefault(_isPrefixedValue);
 
-	var _capitalizeString = __webpack_require__(451);
+	var _capitalizeString = __webpack_require__(455);
 
 	var _capitalizeString2 = _interopRequireDefault(_capitalizeString);
 
@@ -47604,7 +48253,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 480 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47635,7 +48284,7 @@
 	}
 
 /***/ }),
-/* 481 */
+/* 485 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47644,7 +48293,7 @@
 	  value: true
 	});
 
-	var _keys = __webpack_require__(423);
+	var _keys = __webpack_require__(425);
 
 	var _keys2 = _interopRequireDefault(_keys);
 
@@ -47737,7 +48386,7 @@
 	}
 
 /***/ }),
-/* 482 */
+/* 486 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -47767,7 +48416,7 @@
 	}
 
 /***/ }),
-/* 483 */
+/* 487 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47780,7 +48429,7 @@
 
 	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _colors = __webpack_require__(445);
+	var _colors = __webpack_require__(449);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47805,6 +48454,657 @@
 	};
 
 	exports.default = new Typography();
+
+/***/ }),
+/* 488 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Divider = __webpack_require__(385);
+
+	var _Divider2 = _interopRequireDefault(_Divider);
+
+	var _Paper = __webpack_require__(419);
+
+	var _Paper2 = _interopRequireDefault(_Paper);
+
+	var _reactRouter = __webpack_require__(173);
+
+	var _TextField = __webpack_require__(421);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	var _RaisedButton = __webpack_require__(433);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+	var _axios = __webpack_require__(387);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var style = {
+	  marginLeft: 20
+	};
+
+	var UpdatePropertyForm = function (_Component) {
+	  _inherits(UpdatePropertyForm, _Component);
+
+	  function UpdatePropertyForm(props) {
+	    _classCallCheck(this, UpdatePropertyForm);
+
+	    var _this = _possibleConstructorReturn(this, (UpdatePropertyForm.__proto__ || Object.getPrototypeOf(UpdatePropertyForm)).call(this, props));
+
+	    _this.state = {
+	      updatedProperty: {}
+	    };
+	    _this.handleInputChange = _this.handleInputChange.bind(_this);
+	    _this.handelUpdateProperty = _this.handelUpdateProperty.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(UpdatePropertyForm, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var token = localStorage.getItem('token');
+	      if (!token) _reactRouter.browserHistory.push('/signin-form');
+	    }
+	  }, {
+	    key: 'handleInputChange',
+	    value: function handleInputChange(e) {
+
+	      var key = e.target.name;
+	      var obj = {};
+	      obj[key] = e.target.value;
+	      console.log(key + ': ' + e.target.value);
+	      var updatedValues = Object.assign({}, this.state.updatedProperty, obj);
+	      this.setState({ updatedProperty: updatedValues });
+	    }
+	  }, {
+	    key: 'handelUpdateProperty',
+	    value: function handelUpdateProperty(e) {
+	      e.preventDefault();
+
+	      _axios2.default.put(("http://localhost:3000") + '/users/59053f756163d6141e07b06a/properties', this.state.updatedProperty).then(function (res) {
+	        console.log(res);
+	        _reactRouter.browserHistory.push('/properties-edit');
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
+	    key: 'cancelEditForm',
+	    value: function cancelEditForm() {
+	      _reactRouter.browserHistory.push('/properties-edit');
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var property = JSON.parse(localStorage.property);
+	      var styles = {
+	        form: {
+	          width: '360px',
+	          margin: '0 auto'
+	        },
+	        btn: {
+	          marginRight: '25px'
+	        }
+	      };
+	      return _react2.default.createElement(
+	        'section',
+	        { className: 'container' },
+	        _react2.default.createElement(
+	          'form',
+	          { onSubmit: this.handelUpdateProperty, className: 'form-horizontal' },
+	          _react2.default.createElement(
+	            'fieldset',
+	            null,
+	            _react2.default.createElement(
+	              'legend',
+	              null,
+	              'Add Property'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	                'Address'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'address', type: 'text', className: 'form-control', id: 'inputName', value: property.address })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	                'City'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'city', type: 'text', className: 'form-control', id: 'inputCity', value: property.city })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	                'State'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'state', type: 'text', className: 'form-control', id: 'inputCity', value: property.state })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	                'Zip Code'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'zipCode', type: 'number', className: 'form-control', id: 'inputZipcode', value: property.zipCode })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputEmail', className: 'col-lg-2 control-label' },
+	                'Number of Bedrooms'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'numOfBedrms', type: 'number', className: 'form-control', id: 'inputEmail', value: property.numOfBedrms })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputEmail', className: 'col-lg-2 control-label' },
+	                'Number of Bathrooms'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'numOfBathrms', type: 'number', className: 'form-control', id: 'inputEmail', value: property.numOfBathrms })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputStreet', className: 'col-lg-2 control-label' },
+	                'Square Feet'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'sqft', type: 'number', className: 'form-control', id: 'inputStreet', value: property.sqft })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputStreet', className: 'col-lg-2 control-label' },
+	                'Price'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'price', type: 'number', className: 'form-control', id: 'inputStreet', value: property.price })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputPhone', className: 'col-lg-2 control-label' },
+	                'Phone'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'telephone', type: 'number', className: 'form-control', id: 'inputPhone', value: property.phone })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
+	                'Manager/Owner'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'manager', type: 'text', className: 'form-control', id: 'inputState', value: property.manager })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Cats Allowed'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'isCatsOk', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.isCatsOk ? 'true' : 'false' },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'false' },
+	                    'No'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'true' },
+	                    'Yes'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Dogs Allowed'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'isDogsOk', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.isDogsOk ? 'true' : 'false' },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'false' },
+	                    'No'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'true' },
+	                    'Yes'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Furnished'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'furnished', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.furnished ? 'true' : 'false' },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'false' },
+	                    'No'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'true' },
+	                    'Yes'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Wheel Chair Access'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'wheelChairAccess', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.wheelChairAccess ? 'true' : 'false' },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'false' },
+	                    'No'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'true' },
+	                    'Yes'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Smoking Allowed'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'smoking', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.smoking ? 'true' : 'false' },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'false' },
+	                    'No'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: 'true' },
+	                    'Yes'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Housing Type'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { required: true, className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { onChange: this.handleInputChange, name: 'houseType', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.houseType },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Apartment'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Condo'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Cottage/Cabin'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Duplex'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Flat'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'House'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'In-Law'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Loft'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Manufactured'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Assisted Living'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'land'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Parking'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'parking', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.parking },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Carport'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Attached Garage'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Detached Garage'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Off-Street Parking'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Street Parking'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Valet Parking'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'No Parking'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'select', className: 'col-lg-2 control-label' },
+	                'Laundry'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement(
+	                  'select',
+	                  { required: true, onChange: this.handleInputChange, name: 'laundry', className: 'form-control', id: 'select' },
+	                  _react2.default.createElement(
+	                    'option',
+	                    { value: property.laundry },
+	                    '--Select Option--'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'W/D In Unit'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'W/D Hookups'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Laundry In Bldg'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'Laundry On Site'
+	                  ),
+	                  _react2.default.createElement(
+	                    'option',
+	                    null,
+	                    'No Laundry On Site'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
+	                'Description'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10' },
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'description', type: 'text', className: 'form-control', id: 'inputState', value: property.description })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-lg-10 col-lg-offset-2' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { style: styles.btn, onClick: this.cancelEditForm, className: 'btn btn-default' },
+	                  'Cancel'
+	                ),
+	                _react2.default.createElement(
+	                  'button',
+	                  { style: styles.btn, type: 'submit', className: 'btn btn-primary' },
+	                  'Update'
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return UpdatePropertyForm;
+	}(_react.Component);
+
+	exports.default = UpdatePropertyForm;
 
 /***/ })
 /******/ ]);

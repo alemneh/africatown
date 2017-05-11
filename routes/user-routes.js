@@ -7,21 +7,21 @@ const Property = models.Property;
 let UserRoutes = {
 
   signUp: function(req, res) {
-  User.findOne({name: req.body.name}, (err, user) => {
-    if(err) throw err;
-    if(!user) {
-      var newUser = new User(req.body);
-      newUser.save((err, user) => {
-        res.json({
-          data: user,
-          token: user.generateToken()
+    User.findOne({name: req.body.name}, (err, user) => {
+      if(err) throw err;
+      if(!user) {
+        var newUser = new User(req.body);
+        newUser.save((err, user) => {
+          res.json({
+            data: user,
+            token: user.generateToken()
+          });
         });
-      });
-    } else {
-      res.json({status: 'failure', message: 'Username taken!'});
-    }
-  });
-},
+      } else {
+        res.json({status: 'failure', message: 'Username taken!'});
+      }
+    });
+  },
 
   getAllUsers: function(req, res) {
     User.find({}, (err, users) => {

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import Property from '../property/property';
+import PropertyEdit from '../propertyEdit/propertyEdit';
 import {List, ListItem} from 'material-ui/List';
 import { browserHistory } from 'react-router';
 import Subheader from 'material-ui/Subheader';
 import axios from 'axios';
 
 
-class PropertyList extends Component {
+class PropertyListEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +24,7 @@ class PropertyList extends Component {
   viewPropertyDetails(property) {
     console.log(property);
     localStorage.property = JSON.stringify(property);
-    browserHistory.push("/property-details");
+    browserHistory.push("/property-edit");
   }
 
   renderProperties() {
@@ -32,7 +32,7 @@ class PropertyList extends Component {
     if(!properties) return;
     return properties.map((property, index) => {
       return (
-        <Property property={property} viewPropertyDetails={this.viewPropertyDetails} key={index}/>
+        <PropertyEdit property={property} viewPropertyDetails={this.viewPropertyDetails} key={index}/>
       )
     });
   }
@@ -80,4 +80,4 @@ class PropertyList extends Component {
   }
 }
 
-export default PropertyList
+export default PropertyListEdit
