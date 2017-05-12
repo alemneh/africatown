@@ -38614,7 +38614,12 @@
 	    key: 'handelAddProperty',
 	    value: function handelAddProperty(e) {
 	      e.preventDefault();
-	      _axios2.default.post(("http://localhost:3000") + '/users/59053f756163d6141e07b06a/properties', this.state.newProperty).then(function (res) {
+	      var _localStorage = localStorage,
+	          userId = _localStorage.userId,
+	          token = _localStorage.token;
+
+	      var url = ("http://localhost:3000") + '/users/' + userId + '/properties/';
+	      _axios2.default.post(url, this.state.newProperty).then(function (res) {
 	        console.log(res);
 	        _reactRouter.browserHistory.push('/properties-list');
 	      }).catch(function (err) {
@@ -42598,7 +42603,7 @@
 
 	  return _react2.default.createElement(
 	    'div',
-	    null,
+	    { style: styles.img },
 	    _react2.default.createElement(
 	      'h1',
 	      null,
@@ -42808,6 +42813,10 @@
 
 	var _reactRouter = __webpack_require__(173);
 
+	var _axios = __webpack_require__(387);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var propertyDetailsEdit = function propertyDetailsEdit() {
@@ -42815,6 +42824,22 @@
 
 	  var editForm = function editForm() {
 	    _reactRouter.browserHistory.push('/property-edit-form');
+	  };
+
+	  var deleteProperty = function deleteProperty() {
+	    var _localStorage = localStorage,
+	        userId = _localStorage.userId,
+	        token = _localStorage.token;
+
+	    var property = JSON.parse(localStorage.property);
+	    var url = ("http://localhost:3000") + '/users/' + userId + '/properties/' + property._id;
+	    _axios2.default.delete(url).then(function (res) {
+	      console.log(res);
+	      localStorage.property = '';
+	      _reactRouter.browserHistory.push('/properties-edit');
+	    }).catch(function (err) {
+	      console.log(err);
+	    });
 	  };
 	  var styles = {
 	    img: {
@@ -42824,7 +42849,7 @@
 
 	  return _react2.default.createElement(
 	    'div',
-	    null,
+	    { style: styles.img },
 	    _react2.default.createElement(
 	      'h1',
 	      null,
@@ -43023,7 +43048,7 @@
 	      ),
 	      _react2.default.createElement(
 	        'a',
-	        { style: styles.img, href: '#', className: 'btn btn-danger' },
+	        { onClick: deleteProperty, style: styles.img, href: '#', className: 'btn btn-danger' },
 	        'Delete'
 	      )
 	    )
@@ -43125,11 +43150,10 @@
 	          token = _localStorage.token;
 
 	      var property = JSON.parse(localStorage.property);
-	      var url = ("http://localhost:3000") + '/users/' + userId + '/properties/' + property._id;
+	      var url = ("http://localhost:3000") + '/properties/' + property._id;
 	      _axios2.default.put(url, updatedProperty).then(function (res) {
 	        console.log(res);
-	        updatedProperty._id = property._id;
-	        localStorage.property = JSON.stringify(updatedProperty);
+	        localStorage.property = JSON.stringify(res.data.property);
 	        _reactRouter.browserHistory.push('/properties-edit');
 	      }).catch(function (err) {
 	        console.log(err);
@@ -43165,7 +43189,7 @@
 	            _react2.default.createElement(
 	              'legend',
 	              null,
-	              'Add Property'
+	              'Edit Property'
 	            ),
 	            _react2.default.createElement(
 	              'div',

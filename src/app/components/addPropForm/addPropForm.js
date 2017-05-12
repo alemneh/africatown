@@ -37,7 +37,9 @@ class AddPropertyForm extends Component {
 
   handelAddProperty(e) {
     e.preventDefault();
-    axios.post(process.env.URL + '/users/59053f756163d6141e07b06a/properties', this.state.newProperty)
+    const {userId, token} = localStorage;
+    const url = process.env.URL + '/users/' + userId +'/properties/';
+    axios.post(url, this.state.newProperty)
       .then((res) => {
         console.log(res);
         browserHistory.push('/properties-list');

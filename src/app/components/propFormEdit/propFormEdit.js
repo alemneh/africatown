@@ -40,12 +40,11 @@ class UpdatePropertyForm extends Component {
     const { updatedProperty } = this.state;
     const {userId, token} = localStorage;
     const property = JSON.parse(localStorage.property);
-    const url = process.env.URL + '/users/' + userId +'/properties/' + property._id;
+    const url = process.env.URL + '/properties/' + property._id;
     axios.put(url, updatedProperty)
       .then((res) => {
         console.log(res);
-        updatedProperty._id = property._id;
-        localStorage.property = JSON.stringify(updatedProperty);
+        localStorage.property = JSON.stringify(res.data.property);
         browserHistory.push('/properties-edit');
       })
       .catch((err) => {
@@ -72,7 +71,7 @@ class UpdatePropertyForm extends Component {
       <section className="container">
         <form  onSubmit={ this.handelUpdateProperty } className="form-horizontal">
           <fieldset>
-            <legend>Add Property</legend>
+            <legend>Edit Property</legend>
             <div className="form-group">
               <label for="inputName" className="col-lg-2 control-label">Address</label>
               <div className="col-lg-10">

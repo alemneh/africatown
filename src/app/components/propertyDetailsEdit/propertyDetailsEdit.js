@@ -1,5 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
+import axios from 'axios';
 
 
 const propertyDetailsEdit = () => {
@@ -8,6 +9,21 @@ const propertyDetailsEdit = () => {
   const editForm = () => {
     browserHistory.push('/property-edit-form');
   }
+
+  const deleteProperty = () => {
+    const {userId, token} = localStorage;
+    const property = JSON.parse(localStorage.property);
+    const url = process.env.URL + '/users/' + userId +'/properties/' + property._id;
+    axios.delete(url)
+      .then((res) => {
+        console.log(res);
+        localStorage.property = '';
+        browserHistory.push('/properties-edit');
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
   const styles = {
     img: {
       margin: '10px'
@@ -15,7 +31,7 @@ const propertyDetailsEdit = () => {
   }
 
   return (
-    <div>
+    <div style={styles.img}>
         <h1><b>Address:</b> {property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode }</h1>
         <h3><b>Rent:</b> {'$' + property.price}</h3>
         <h3><b>Square Feet:</b> {property.sqft + 'ft'}</h3>
@@ -41,7 +57,7 @@ const propertyDetailsEdit = () => {
         </ul>
         <div>
           <a onClick={ editForm } style={styles.img} href="#" className="btn btn-warning">Edit</a>
-          <a style={styles.img} href="#" className="btn btn-danger">Delete</a>
+          <a onClick={ deleteProperty }style={styles.img} href="#" className="btn btn-danger">Delete</a>
         </div>
     </div>
   )

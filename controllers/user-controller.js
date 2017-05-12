@@ -16,6 +16,6 @@ module.exports = (userRouter, models) => {
     .get((req, res) => {UserRoutes.getAllUserProperties(req, res);})
     .post((req, res) => {UserRoutes.addPropertyToUser(req, res);});
 
-  userRouter.route('/users/:id/properties/propId')
+  userRouter.route('/users/:id/properties/:propId')
     .delete((req, res) => {UserRoutes.removeAProperty(req, res);});
 };

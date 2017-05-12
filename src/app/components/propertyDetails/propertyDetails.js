@@ -10,7 +10,7 @@ const propertyDetails = () => {
   }
 
   return (
-    <div>
+    <div style={styles.img}>
       <h1><b>Address:</b> {property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode }</h1>
       <h3><b>Rent:</b> {'$' + property.price}</h3>
       <h3><b>Square Feet:</b> {property.sqft + 'ft'}</h3>
