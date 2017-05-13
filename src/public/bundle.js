@@ -42565,7 +42565,7 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-lg-10' },
-	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'email', type: 'text', className: 'form-control', id: 'inputPhone', placeholder: 'Phone' })
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'email', type: 'text', className: 'form-control', id: 'inputPhone', placeholder: 'john.doe@example.com' })
 	        )
 	      ),
 	      _react2.default.createElement(
