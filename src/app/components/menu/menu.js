@@ -15,6 +15,7 @@ const MenuComponent = () => {
         <a href="#" className="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span className="caret"></span></a>
         <ul className="dropdown-menu">
           <li><Link to="/properties-edit">Properties</Link></li>
+          <li><Link to="/account">Account</Link></li>
           <li className="divider"></li>
           <li onClick={ logout}><a href="">Sign Out</a></li>
         </ul>

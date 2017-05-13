@@ -1,6 +1,11 @@
 import React from 'react';
 
-const ProviderEditFormCompnent = ({handelUpdateUser, handleInputChange, user}) => {
+const ProviderEditFormCompnent = ({
+  handelUpdateUser,
+  handleInputChange,
+  toggleEditMode,
+  user
+}) => {
   const styles = {
     form: {
       width: '360px',
@@ -64,7 +69,7 @@ const ProviderEditFormCompnent = ({handelUpdateUser, handleInputChange, user}) =
         </div>
         <div className="form-group">
           <div className="col-lg-10 col-lg-offset-2">
-            <button style={styles.btn} type="reset" className="btn btn-default">Cancel</button>
+            <button style={styles.btn} onClick={toggleEditMode} className="btn btn-default">Cancel</button>
             <button style={styles.btn} type="submit" className="btn btn-primary">Submit</button>
           </div>
         </div>

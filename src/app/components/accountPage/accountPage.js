@@ -1,4 +1,9 @@
 import React, {Component} from 'react';
+import SeekerInfo from '../SeekerInfo/SeekerInfo';
+import ProviderInfo from '../ProviderInfo/ProviderInfo';
+import ProviderEditForm from '../ProviderEditForm/ProviderEditForm';
+import SeekerEditForm from '../SeekerEditForm/SeekerEditForm';
+import axios from 'axios';
 
 
 class AccountPage extends Component {
@@ -8,6 +13,8 @@ class AccountPage extends Component {
       isEditMode: false,
       user: {}
     }
+
+    this.toggleEditMode = this.toggleEditMode.bind(this);
   }
 
   componentWillMount() {
@@ -21,7 +28,7 @@ class AccountPage extends Component {
     axios.get(url)
       .then((res) => {
         console.log(res);
-        this.setState({ user: res.data.user });
+        this.setState({ user: res.data.data });
       })
       .catch((err) => {
         console.log(err);
@@ -46,8 +53,8 @@ class AccountPage extends Component {
     axios.put(url, user)
       .then((res) => {
         console.log(res);
-        localStorage.property = JSON.stringify(res.data.property);
-        browserHistory.push('/properties-edit');
+        this.setState({ user: res.data.user });
+        this.toggleEditMode();
       })
       .catch((err) => {
         console.log(err);
@@ -59,14 +66,29 @@ class AccountPage extends Component {
   }
 
   renderAccountInfo() {
-    if(this.isEditMode) {
-      return (
-        <AccountInfoEdit user={user} toggleEditMode={this.toggleEditMode}
-                          handleInputChange={handleInputChange}/>
-      )
+    let { isEditMode, user, handleInputChange } = this.state;
+    if(isEditMode) {
+
+      if(user.userType == 'provider') {
+        return (
+          <ProviderEditForm user={user} toggleEditMode={this.toggleEditMode}
+                            handleInputChange={handleInputChange}/>
+        )
+      } else {
+        return (
+          <SeekerEditForm user={user} toggleEditMode={this.toggleEditMode}
+                            handleInputChange={handleInputChange}/>
+        )
+      }
+
     } else {
+      if(user.userType == 'provider') {
+        return (
+          <ProviderInfo user={user} toggleEditMode={this.toggleEditMode}/>
+        )
+      }
       return (
-        <AccountInfo user={user} toggleEditMode={this.toggleEditMode}/>
+        <SeekerInfo user={user} toggleEditMode={this.toggleEditMode}/>
       )
     }
   }
@@ -77,7 +99,8 @@ class AccountPage extends Component {
         <h1>Account Page</h1>
         { this.renderAccountInfo() }
       </section>
-      {}
     )
   }
 }
+
+export default AccountPage;

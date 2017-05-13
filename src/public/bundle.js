@@ -85,6 +85,10 @@
 
 	var _SignUpForm2 = _interopRequireDefault(_SignUpForm);
 
+	var _accountPage = __webpack_require__(489);
+
+	var _accountPage2 = _interopRequireDefault(_accountPage);
+
 	var _propertyDetails = __webpack_require__(440);
 
 	var _propertyDetails2 = _interopRequireDefault(_propertyDetails);
@@ -108,6 +112,7 @@
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _home2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/properties-list', component: _PropertyList2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/account', component: _accountPage2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/properties-edit', component: _propertyListEdit2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/property-details', component: _propertyDetails2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/property-edit', component: _propertyDetailsEdit2.default }),
@@ -43862,6 +43867,15 @@
 	            'Properties'
 	          )
 	        ),
+	        _react2.default.createElement(
+	          'li',
+	          null,
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/account' },
+	            'Account'
+	          )
+	        ),
 	        _react2.default.createElement('li', { className: 'divider' }),
 	        _react2.default.createElement(
 	          'li',
@@ -49153,6 +49167,1292 @@
 	};
 
 	exports.default = new Typography();
+
+/***/ }),
+/* 489 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _SeekerInfo = __webpack_require__(490);
+
+	var _SeekerInfo2 = _interopRequireDefault(_SeekerInfo);
+
+	var _ProviderInfo = __webpack_require__(491);
+
+	var _ProviderInfo2 = _interopRequireDefault(_ProviderInfo);
+
+	var _ProviderEditForm = __webpack_require__(492);
+
+	var _ProviderEditForm2 = _interopRequireDefault(_ProviderEditForm);
+
+	var _SeekerEditForm = __webpack_require__(493);
+
+	var _SeekerEditForm2 = _interopRequireDefault(_SeekerEditForm);
+
+	var _axios = __webpack_require__(387);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AccountPage = function (_Component) {
+	  _inherits(AccountPage, _Component);
+
+	  function AccountPage(props) {
+	    _classCallCheck(this, AccountPage);
+
+	    var _this = _possibleConstructorReturn(this, (AccountPage.__proto__ || Object.getPrototypeOf(AccountPage)).call(this, props));
+
+	    _this.state = {
+	      isEditMode: false,
+	      user: {}
+	    };
+
+	    _this.toggleEditMode = _this.toggleEditMode.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(AccountPage, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _localStorage = localStorage,
+	          userId = _localStorage.userId,
+	          token = _localStorage.token;
+
+	      this.fetchUser(userId, token);
+	    }
+	  }, {
+	    key: 'fetchUser',
+	    value: function fetchUser(userId, token) {
+	      var _this2 = this;
+
+	      var url = ("http://localhost:3000") + '/users/' + userId;
+	      _axios2.default.get(url).then(function (res) {
+	        console.log(res);
+	        _this2.setState({ user: res.data.data });
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
+	    key: 'handleInputChange',
+	    value: function handleInputChange(e) {
+
+	      var key = e.target.name;
+	      var obj = {};
+	      obj[key] = e.target.value;
+	      console.log(key + ': ' + e.target.value);
+	      var updatedValues = Object.assign({}, this.state.user, obj);
+	      this.setState({ user: updatedValues });
+	    }
+	  }, {
+	    key: 'handelUpdateUser',
+	    value: function handelUpdateUser(e) {
+	      var _this3 = this;
+
+	      e.preventDefault();
+	      var user = this.state.user;
+	      var _localStorage2 = localStorage,
+	          userId = _localStorage2.userId,
+	          token = _localStorage2.token;
+
+	      var url = ("http://localhost:3000") + '/users/' + userId;
+	      _axios2.default.put(url, user).then(function (res) {
+	        console.log(res);
+	        _this3.setState({ user: res.data.user });
+	        _this3.toggleEditMode();
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
+	    key: 'toggleEditMode',
+	    value: function toggleEditMode() {
+	      this.setState({ isEditMode: !this.state.isEditMode });
+	    }
+	  }, {
+	    key: 'renderAccountInfo',
+	    value: function renderAccountInfo() {
+	      var _state = this.state,
+	          isEditMode = _state.isEditMode,
+	          user = _state.user,
+	          handleInputChange = _state.handleInputChange;
+
+	      if (isEditMode) {
+
+	        if (user.userType == 'provider') {
+	          return _react2.default.createElement(_ProviderEditForm2.default, { user: user, toggleEditMode: this.toggleEditMode,
+	            handleInputChange: handleInputChange });
+	        } else {
+	          return _react2.default.createElement(_SeekerEditForm2.default, { user: user, toggleEditMode: this.toggleEditMode,
+	            handleInputChange: handleInputChange });
+	        }
+	      } else {
+	        if (user.userType == 'provider') {
+	          return _react2.default.createElement(_ProviderInfo2.default, { user: user, toggleEditMode: this.toggleEditMode });
+	        }
+	        return _react2.default.createElement(_SeekerInfo2.default, { user: user, toggleEditMode: this.toggleEditMode });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'section',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Account Page'
+	        ),
+	        this.renderAccountInfo()
+	      );
+	    }
+	  }]);
+
+	  return AccountPage;
+	}(_react.Component);
+
+	exports.default = AccountPage;
+
+/***/ }),
+/* 490 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SeekerInfo = function SeekerInfo(_ref) {
+	  var user = _ref.user,
+	      toggleEditMode = _ref.toggleEditMode,
+	      deleteAccount = _ref.deleteAccount;
+
+	  var styles = {
+	    img: {
+	      margin: '10px'
+	    }
+	  };
+
+	  return _react2.default.createElement(
+	    'div',
+	    { style: styles.img },
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Name:'
+	      ),
+	      ' ',
+	      user.name
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Address:'
+	      ),
+	      ' ',
+	      user.address
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'City:'
+	      ),
+	      ' ',
+	      user.city
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'State:'
+	      ),
+	      ' ',
+	      user.state
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Zip Code:'
+	      ),
+	      ' ',
+	      user.zipCode
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Phone:'
+	      ),
+	      ' ',
+	      user.telephone
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Email:'
+	      ),
+	      ' ',
+	      user.email
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'DOB:'
+	      ),
+	      ' ',
+	      user.dob
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Race/Ethnicity:'
+	      ),
+	      ' ',
+	      user.race
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Profession:'
+	      ),
+	      ' ',
+	      user.profession
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Income Level:'
+	      ),
+	      ' ',
+	      user.income
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Housing Budget:'
+	      ),
+	      ' ',
+	      user.housingBudget
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Household Size:'
+	      ),
+	      ' ',
+	      user.houseHoldSize
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Who is the head of this household?:'
+	      ),
+	      ' ',
+	      user.headOfHouseHold
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'How many adults in this household?:'
+	      ),
+	      ' ',
+	      user.adultsInHouseHold
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Do you have pets:'
+	      ),
+	      ' ',
+	      user.havePets ? 'Yes' : 'No'
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'What is your historical connection to the Black community in the Centeral District:'
+	      ),
+	      ' ',
+	      user.connectionToBlkCommunity
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'How do you see yourself contributing to the Africatown vision for preserving and developing the Black community in the Central District?:'
+	      ),
+	      ' ',
+	      user.contribution
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'If you want to live in the Central District but currently do not, what is the main barrier stopping you from living here?:'
+	      ),
+	      ' ',
+	      user.wantToLiveInCD
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'If you don\'t currently live in the Central District, do you come regularly?:'
+	      ),
+	      ' ',
+	      user.visitingReason
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Household Size:'
+	      ),
+	      ' ',
+	      user.houseHoldSize
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'a',
+	        { onClick: toggleEditMode, style: styles.img, href: '#', className: 'btn btn-warning' },
+	        'Edit'
+	      ),
+	      _react2.default.createElement(
+	        'a',
+	        { onClick: deleteAccount, style: styles.img, href: '#', className: 'btn btn-danger' },
+	        'Delete'
+	      )
+	    )
+	  );
+	};
+
+	exports.default = SeekerInfo;
+
+/***/ }),
+/* 491 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ProviderInfo = function ProviderInfo(_ref) {
+	  var user = _ref.user,
+	      toggleEditMode = _ref.toggleEditMode,
+	      deleteAccount = _ref.deleteAccount;
+
+	  var styles = {
+	    img: {
+	      margin: '10px'
+	    }
+	  };
+
+	  return _react2.default.createElement(
+	    'div',
+	    { style: styles.img },
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Name:'
+	      ),
+	      ' ',
+	      user.name
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Organization:'
+	      ),
+	      ' ',
+	      user.organization
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Address:'
+	      ),
+	      ' ',
+	      user.address
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'City:'
+	      ),
+	      ' ',
+	      user.city
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'State:'
+	      ),
+	      ' ',
+	      user.state
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Zip Code:'
+	      ),
+	      ' ',
+	      user.zipCode
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Phone:'
+	      ),
+	      ' ',
+	      user.telephone
+	    ),
+	    _react2.default.createElement(
+	      'h3',
+	      null,
+	      _react2.default.createElement(
+	        'b',
+	        null,
+	        'Email:'
+	      ),
+	      ' ',
+	      user.email
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'a',
+	        { onClick: toggleEditMode, style: styles.img, href: '#', className: 'btn btn-warning' },
+	        'Edit'
+	      ),
+	      _react2.default.createElement(
+	        'a',
+	        { onClick: deleteAccount, style: styles.img, href: '#', className: 'btn btn-danger' },
+	        'Delete'
+	      )
+	    )
+	  );
+	};
+
+	exports.default = ProviderInfo;
+
+/***/ }),
+/* 492 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ProviderEditFormCompnent = function ProviderEditFormCompnent(_ref) {
+	  var handelUpdateUser = _ref.handelUpdateUser,
+	      handleInputChange = _ref.handleInputChange,
+	      toggleEditMode = _ref.toggleEditMode,
+	      user = _ref.user;
+
+	  var styles = {
+	    form: {
+	      width: '360px',
+	      margin: '0 auto'
+	    },
+	    btn: {
+	      marginRight: '25px'
+	    }
+	  };
+	  return _react2.default.createElement(
+	    'form',
+	    { onSubmit: handelUpdateUser, className: 'form-horizontal' },
+	    _react2.default.createElement(
+	      'fieldset',
+	      null,
+	      _react2.default.createElement(
+	        'legend',
+	        null,
+	        'Edit Info Provider'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	          'Name'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'name', type: 'text', className: 'form-control', id: 'inputName', value: user.name })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	          'Organization'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'organization', type: 'text', className: 'form-control', id: 'inputName', value: user.organization })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	          'Address'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'address', type: 'text', className: 'form-control', id: 'inputName', value: user.address })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	          'City'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'city', type: 'text', className: 'form-control', id: 'inputCity', value: user.city })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	          'State'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'state', type: 'text', className: 'form-control', id: 'inputCity', value: user.state })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'Zip Code'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'zipCode', type: 'number', className: 'form-control', id: 'inputZipcode', value: user.zipCode })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputPhone', className: 'col-lg-2 control-label' },
+	          'Phone'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'telephone', type: 'number', className: 'form-control', id: 'inputPhone', value: user.telephone })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputPhone', className: 'col-lg-2 control-label' },
+	          'Email'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'email', type: 'text', className: 'form-control', id: 'inputPhone', value: user.email })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10 col-lg-offset-2' },
+	          _react2.default.createElement(
+	            'button',
+	            { style: styles.btn, onClick: toggleEditMode, className: 'btn btn-default' },
+	            'Cancel'
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { style: styles.btn, type: 'submit', className: 'btn btn-primary' },
+	            'Submit'
+	          )
+	        )
+	      )
+	    )
+	  );
+	};
+
+	exports.default = ProviderEditFormCompnent;
+
+/***/ }),
+/* 493 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SeekerEditFormComponent = function SeekerEditFormComponent(_ref) {
+	  var handelSignUp = _ref.handelSignUp,
+	      handleInputChange = _ref.handleInputChange;
+
+	  var styles = {
+	    form: {
+	      width: '360px',
+	      margin: '0 auto'
+	    },
+	    btn: {
+	      marginRight: '25px'
+	    }
+	  };
+	  return _react2.default.createElement(
+	    'form',
+	    { onSubmit: handelSignUp, className: 'form-horizontal' },
+	    _react2.default.createElement(
+	      'fieldset',
+	      null,
+	      _react2.default.createElement(
+	        'legend',
+	        null,
+	        'Edit Info Seeker'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	          'Name'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'name', type: 'text', className: 'form-control', id: 'inputName', value: user.name })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputPhone', className: 'col-lg-2 control-label' },
+	          'Phone'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'telephone', type: 'number', className: 'form-control', id: 'inputPhone', value: user.telephone })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputPhone', className: 'col-lg-2 control-label' },
+	          'Email'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'email', type: 'text', className: 'form-control', id: 'inputPhone', value: user.email })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	          'Address'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'address', type: 'text', className: 'form-control', id: 'inputName', value: user.address })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	          'City'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'city', type: 'text', className: 'form-control', id: 'inputCity', value: user.city })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	          'State'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'state', type: 'text', className: 'form-control', id: 'inputCity', value: user.state })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'Zip Code'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'zipCode', type: 'number', className: 'form-control', id: 'inputZipcode', value: user.zipCode })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'Date of Birth'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'dob', type: 'date', className: 'form-control', id: 'inputZipcode', value: user.dob })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'select', className: 'col-lg-2 control-label' },
+	          'Race/Ethnicity'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement(
+	            'select',
+	            { required: true, onChange: handleInputChange, name: 'race', className: 'form-control', id: 'select', value: user.race },
+	            _react2.default.createElement(
+	              'option',
+	              { value: '' },
+	              '--Select Option--'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Black'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'White'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Asian'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Hispanic'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Mixed'
+	            )
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'Profession'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'profession', type: 'text', className: 'form-control', id: 'inputZipcode', value: user.profession })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'select', className: 'col-lg-2 control-label' },
+	          'Income Level'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement(
+	            'select',
+	            { required: true, onChange: handleInputChange, name: 'income', className: 'form-control', id: 'select', value: user.income },
+	            _react2.default.createElement(
+	              'option',
+	              { value: '' },
+	              '--Select Option--'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              '0 - $20,000'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              '$20,001 - $30,000'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              '$30,001 - $40,000'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              '$40,001 - $50,000'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              '$50,001 - $75,000'
+	            )
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'Housing Budget'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'housingBudget', type: 'number', className: 'form-control', id: 'inputZipcode', value: user.housingBudget })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'Household Size'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'houseHoldSize', type: 'number', className: 'form-control', id: 'inputZipcode', value: user.houseHoldSize })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'Who is the head of this household?'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'headOfHouseHold', type: 'text', className: 'form-control', id: 'inputZipcode', value: user.headOfHouseHold })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	          'How many adults in this household?'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'adultsInHouseHold', type: 'number', className: 'form-control', id: 'inputZipcode', value: user.adultsInHouseHold })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'select', className: 'col-lg-2 control-label' },
+	          'Do you have pets?'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement(
+	            'select',
+	            { required: true, onChange: handleInputChange, name: 'havePets', className: 'form-control', id: 'select', value: user.havePets },
+	            _react2.default.createElement(
+	              'option',
+	              { value: '' },
+	              '--Select Option--'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'false' },
+	              'No'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'true' },
+	              'Yes'
+	            )
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'select', className: 'col-lg-2 control-label' },
+	          'What is your historical connection to the Black community in the Central District? '
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement(
+	            'select',
+	            { required: true, onChange: handleInputChange, name: 'connectionToBlkCommunity', className: 'form-control', id: 'select', value: user.connectionToBlkCommunity },
+	            _react2.default.createElement(
+	              'option',
+	              { value: '' },
+	              '--Select Option--'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Currently live here'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Previously lived here'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Family currently live here'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Family previously lived here'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              ' Other'
+	            )
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'textArea', className: 'col-lg-2 control-label' },
+	          'How do you see yourself contributing to the Africatown vision for preserving and developing the Black community in the Central District?'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement('textarea', { name: 'contribution', className: 'form-control', rows: '3', id: 'textArea', value: user.contribution })
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'select', className: 'col-lg-2 control-label' },
+	          'If you want to live in the Central District but currently do not, what is the main barrier stopping you from living here?'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement(
+	            'select',
+	            { required: true, onChange: handleInputChange, name: 'wantToLiveInCD', className: 'form-control', id: 'select', value: user.wantToLiveInCD },
+	            _react2.default.createElement(
+	              'option',
+	              { value: '' },
+	              '--Select Option--'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Cost of housing'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Personal safety'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Other'
+	            )
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'select', className: 'col-lg-2 control-label' },
+	          'If you don\'t currently live in the Central District, do you come regularly?'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10' },
+	          _react2.default.createElement(
+	            'select',
+	            { required: true, onChange: handleInputChange, name: 'visitingReason', className: 'form-control', id: 'select', value: user.visitingReason },
+	            _react2.default.createElement(
+	              'option',
+	              { value: '' },
+	              '--Select Option--'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Shopping'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Worship'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Dining out'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Visiting Family'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Visiting Friends'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Work'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              null,
+	              'Other'
+	            )
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-lg-10 col-lg-offset-2' },
+	          _react2.default.createElement(
+	            'button',
+	            { style: styles.btn, type: 'reset', className: 'btn btn-default' },
+	            'Cancel'
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { style: styles.btn, type: 'submit', className: 'btn btn-primary' },
+	            'Submit'
+	          )
+	        )
+	      )
+	    )
+	  );
+	};
+
+	exports.default = SeekerEditFormComponent;
 
 /***/ })
 /******/ ]);

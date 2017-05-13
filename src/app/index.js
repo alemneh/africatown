@@ -7,6 +7,7 @@ import AddPropertyForm from './components/addPropForm/addPropForm';
 import HomePage from './components/home/home';
 import SignInForm from './components/signin/signin';
 import SignUpForm from './components/SignUpForm/SignUpForm';
+import AccountPage from './components/accountPage/accountPage';
 import PropertyDetails from './components/propertyDetails/propertyDetails';
 import propertyDetailsEdit from './components/propertyDetailsEdit/propertyDetailsEdit';
 import propertyDetailsEditForm from './components/propFormEdit/propFormEdit';
@@ -17,6 +18,7 @@ const routes = (
   <Route path="/" component={App}>
     <IndexRoute component={HomePage}/>
     <Route path="/properties-list" component={PropertyList} />
+    <Route path="/account" component={AccountPage} />
     <Route path="/properties-edit" component={PropertyListEdit} />
     <Route path="/property-details" component={PropertyDetails} />
     <Route path="/property-edit" component={propertyDetailsEdit} />
