@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropertyEdit from '../propertyEdit/propertyEdit';
 import {List, ListItem} from 'material-ui/List';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import Subheader from 'material-ui/Subheader';
 import axios from 'axios';
 
@@ -29,7 +29,11 @@ class PropertyListEdit extends Component {
 
   renderProperties() {
     const { properties } = this.state;
-    if(!properties) return;
+    if(!properties) {
+      return (
+        <p>No properties. <Link to="/add-property">Add Property</Link></p>
+      );
+    }
     return properties.map((property, index) => {
       return (
         <PropertyEdit property={property} viewPropertyDetails={this.viewPropertyDetails} key={index}/>
@@ -38,7 +42,9 @@ class PropertyListEdit extends Component {
   }
 
   fetchProperties() {
-    axios.get(process.env.URL + '/properties')
+    const { userId } = localStorage;
+    const url = process.env.URL + '/users/' + userId + '/properties';
+    axios.get(url)
       .then((res) => {
         console.log(res.data.properties);
         this.setState({ properties: res.data.properties });
@@ -71,7 +77,7 @@ class PropertyListEdit extends Component {
     return (
       <section style={styles.container}>
         <List>
-          <Subheader>Today</Subheader>
+          <Subheader>Your Properties</Subheader>
           { this.renderProperties() }
         </List>
       </section>

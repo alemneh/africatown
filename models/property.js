@@ -22,6 +22,7 @@ module.exports = (mongoose, models) => {
     telephone: Number,
     manager: String,
     city: String,
+    state: String,
     zipCode: Number
   });
 

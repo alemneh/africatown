@@ -38407,7 +38407,18 @@
 
 	      var properties = this.state.properties;
 
-	      if (!properties) return;
+	      if (!properties) {
+	        return _react2.default.createElement(
+	          'p',
+	          null,
+	          'No properties. ',
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/add-property' },
+	            'Add Property'
+	          )
+	        );
+	      }
 	      return properties.map(function (property, index) {
 	        return _react2.default.createElement(_propertyEdit2.default, { property: property, viewPropertyDetails: _this2.viewPropertyDetails, key: index });
 	      });
@@ -38417,7 +38428,11 @@
 	    value: function fetchProperties() {
 	      var _this3 = this;
 
-	      _axios2.default.get(("http://localhost:3000") + '/properties').then(function (res) {
+	      var _localStorage = localStorage,
+	          userId = _localStorage.userId;
+
+	      var url = ("http://localhost:3000") + '/users/' + userId + '/properties';
+	      _axios2.default.get(url).then(function (res) {
 	        console.log(res.data.properties);
 	        _this3.setState({ properties: res.data.properties });
 	      }).catch(function (err) {
@@ -38455,7 +38470,7 @@
 	          _react2.default.createElement(
 	            _Subheader2.default,
 	            null,
-	            'Today'
+	            'Your Properties'
 	          ),
 	          this.renderProperties()
 	        )
@@ -43116,7 +43131,7 @@
 	    var _this = _possibleConstructorReturn(this, (UpdatePropertyForm.__proto__ || Object.getPrototypeOf(UpdatePropertyForm)).call(this, props));
 
 	    _this.state = {
-	      updatedProperty: {}
+	      property: {}
 	    };
 	    _this.handleInputChange = _this.handleInputChange.bind(_this);
 	    _this.handelUpdateProperty = _this.handelUpdateProperty.bind(_this);
@@ -43126,7 +43141,11 @@
 	  _createClass(UpdatePropertyForm, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      var token = localStorage.getItem('token');
+	      var _localStorage = localStorage,
+	          token = _localStorage.token;
+
+	      var property = JSON.parse(localStorage.property);
+	      this.setState({ property: property });
 	      if (!token) _reactRouter.browserHistory.push('/signin-form');
 	    }
 	  }, {
@@ -43137,21 +43156,21 @@
 	      var obj = {};
 	      obj[key] = e.target.value;
 	      console.log(key + ': ' + e.target.value);
-	      var updatedValues = Object.assign({}, this.state.updatedProperty, obj);
-	      this.setState({ updatedProperty: updatedValues });
+	      var updatedValues = Object.assign({}, this.state.property, obj);
+	      this.setState({ property: updatedValues });
 	    }
 	  }, {
 	    key: 'handelUpdateProperty',
 	    value: function handelUpdateProperty(e) {
 	      e.preventDefault();
-	      var updatedProperty = this.state.updatedProperty;
-	      var _localStorage = localStorage,
-	          userId = _localStorage.userId,
-	          token = _localStorage.token;
+	      var property = this.state.property;
+	      var _localStorage2 = localStorage,
+	          userId = _localStorage2.userId,
+	          token = _localStorage2.token;
+	      // const property = JSON.parse(localStorage.property);
 
-	      var property = JSON.parse(localStorage.property);
 	      var url = ("http://localhost:3000") + '/properties/' + property._id;
-	      _axios2.default.put(url, updatedProperty).then(function (res) {
+	      _axios2.default.put(url, property).then(function (res) {
 	        console.log(res);
 	        localStorage.property = JSON.stringify(res.data.property);
 	        _reactRouter.browserHistory.push('/properties-edit');
@@ -43167,7 +43186,9 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var property = JSON.parse(localStorage.property);
+	      var property = this.state.property;
+
+	      console.log(property);
 	      var styles = {
 	        form: {
 	          width: '360px',
@@ -43314,7 +43335,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'telephone', type: 'number', className: 'form-control', id: 'inputPhone', value: property.phone })
+	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'telephone', type: 'number', className: 'form-control', id: 'inputPhone', value: property.telephone })
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -43344,28 +43365,20 @@
 	                { className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'isCatsOk', className: 'form-control', id: 'select' },
+	                  { required: true, onChange: this.handleInputChange, value: property.isCatsOk, name: 'isCatsOk', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.isCatsOk ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'false' },
 	                    'No'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'false' },
-	                    'No'
 	                  ),
-	                  property.isCatsOk ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'true' },
-	                    'Yes'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'true' },
 	                    'Yes'
 	                  )
 	                )
@@ -43384,28 +43397,20 @@
 	                { className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'isDogsOk', className: 'form-control', id: 'select' },
+	                  { required: true, onChange: this.handleInputChange, value: property.isDogsOk, name: 'isDogsOk', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.isDogsOk ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'false' },
 	                    'No'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'false' },
-	                    'No'
 	                  ),
-	                  property.isDogsOk ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'true' },
-	                    'Yes'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'true' },
 	                    'Yes'
 	                  )
 	                )
@@ -43424,28 +43429,20 @@
 	                { className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'furnished', className: 'form-control', id: 'select' },
+	                  { required: true, onChange: this.handleInputChange, value: property.furnished, name: 'furnished', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.furnished ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'false' },
 	                    'No'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'false' },
-	                    'No'
 	                  ),
-	                  property.furnished ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'true' },
-	                    'Yes'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'true' },
 	                    'Yes'
 	                  )
 	                )
@@ -43464,28 +43461,20 @@
 	                { className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'wheelChairAccess', className: 'form-control', id: 'select' },
+	                  { required: true, onChange: this.handleInputChange, value: property.wheelChairAccess, name: 'wheelChairAccess', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.wheelChairAccess ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'false' },
 	                    'No'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'false' },
-	                    'No'
 	                  ),
-	                  property.wheelChairAccess ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'true' },
-	                    'Yes'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'true' },
 	                    'Yes'
 	                  )
 	                )
@@ -43504,28 +43493,20 @@
 	                { className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'smoking', className: 'form-control', id: 'select' },
+	                  { required: true, onChange: this.handleInputChange, value: property.furnished, name: 'smoking', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.smoking ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'false' },
 	                    'No'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'false' },
-	                    'No'
 	                  ),
-	                  property.smoking ? _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    { value: 'true' },
-	                    'Yes'
-	                  ) : _react2.default.createElement(
-	                    'option',
-	                    { selected: true, value: 'true' },
 	                    'Yes'
 	                  )
 	                )
@@ -43544,98 +43525,58 @@
 	                { required: true, className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { onChange: this.handleInputChange, name: 'houseType', className: 'form-control', id: 'select' },
+	                  { onChange: this.handleInputChange, value: property.houseType, name: 'houseType', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.houseType == 'Apartment' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Apartment'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Apartment'
 	                  ),
-	                  property.houseType == 'Condo' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Condo'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Condo'
 	                  ),
-	                  property.houseType == 'Cottage/Cabin' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Cottage/Cabin'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Cottage/Cabin'
 	                  ),
-	                  property.houseType == 'Duplex' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Duplex'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Duplex'
 	                  ),
-	                  property.houseType == 'Flat' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Flat'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Flat'
 	                  ),
-	                  property.houseType == 'House' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'House'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'House'
 	                  ),
-	                  property.houseType == 'In-Law' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'In-Law'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'In-Law'
 	                  ),
-	                  property.houseType == 'Loft' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Loft'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Loft'
 	                  ),
-	                  property.houseType == 'Assisted Living' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Assisted Living'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Assisted Living'
 	                  ),
-	                  property.houseType == 'land' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'land'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'land'
@@ -43656,71 +43597,43 @@
 	                { className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'parking', className: 'form-control', id: 'select' },
+	                  { required: true, onChange: this.handleInputChange, value: property.parking, name: 'parking', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.houseType == 'Carport' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Carport'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Carport'
 	                  ),
-	                  property.houseType == 'Attached Garage' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Attached Garage'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Attached Garage'
 	                  ),
-	                  property.houseType == 'Detached Garage' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Detached Garage'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Detached Garage'
 	                  ),
-	                  property.houseType == 'Off-Street Parking' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Off-Street Parking'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Off-Street Parking'
 	                  ),
-	                  property.houseType == 'Street Parking' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Street Parking'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Street Parking'
 	                  ),
-	                  property.houseType == 'Valet Parking' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Valet Parking'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Valet Parking'
 	                  ),
-	                  property.houseType == 'No Parking<' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'No Parking'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'No Parking'
@@ -43741,53 +43654,33 @@
 	                { className: 'col-lg-10' },
 	                _react2.default.createElement(
 	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'laundry', className: 'form-control', id: 'select' },
+	                  { required: true, onChange: this.handleInputChange, value: property.laundry, name: 'laundry', className: 'form-control', id: 'select' },
 	                  _react2.default.createElement(
 	                    'option',
 	                    { value: '' },
 	                    '--Select Option--'
 	                  ),
-	                  property.houseType == 'W/D In Unit' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'W/D In Unit'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'W/D In Unit'
 	                  ),
-	                  property.houseType == 'W/D Hookups' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'W/D Hookups'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'W/D Hookups'
 	                  ),
-	                  property.houseType == 'Laundry In Bldg' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Laundry In Bldg'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Laundry In Bldg'
 	                  ),
-	                  property.houseType == 'Laundry On Site' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Laundry On Site'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Laundry On Site'
 	                  ),
-	                  property.houseType == 'No Laundry On Site' ? _react2.default.createElement(
-	                    'option',
-	                    { selected: true },
-	                    'Valet Parking'
-	                  ) : _react2.default.createElement(
+	                  _react2.default.createElement(
 	                    'option',
 	                    null,
 	                    'Valet Parking'

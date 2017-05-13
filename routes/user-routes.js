@@ -64,7 +64,7 @@ let UserRoutes = {
       .populate('properties')
       .exec((err, user) => {
         if(err) throw err;
-        res.status(200).json({data: user.properties});
+        res.status(200).json({properties: user.properties});
       });
   },
 

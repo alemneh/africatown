@@ -14,14 +14,16 @@ class UpdatePropertyForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      updatedProperty: {}
+      property: {}
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handelUpdateProperty = this.handelUpdateProperty.bind(this);
   }
 
   componentWillMount() {
-    const token = localStorage.getItem('token');
+    const { token } = localStorage;
+    let property = JSON.parse(localStorage.property);
+    this.setState({ property });
     if(!token) browserHistory.push('/signin-form');
   }
 
@@ -31,17 +33,17 @@ class UpdatePropertyForm extends Component {
     let obj = {};
     obj[key] = e.target.value;
     console.log(key+': ' + e.target.value);
-    let updatedValues = Object.assign({}, this.state.updatedProperty, obj);
-    this.setState({updatedProperty: updatedValues});
+    let updatedValues = Object.assign({}, this.state.property, obj);
+    this.setState({property: updatedValues});
   }
 
   handelUpdateProperty(e) {
     e.preventDefault();
-    const { updatedProperty } = this.state;
+    const { property } = this.state;
     const {userId, token} = localStorage;
-    const property = JSON.parse(localStorage.property);
+    // const property = JSON.parse(localStorage.property);
     const url = process.env.URL + '/properties/' + property._id;
-    axios.put(url, updatedProperty)
+    axios.put(url, property)
       .then((res) => {
         console.log(res);
         localStorage.property = JSON.stringify(res.data.property);
@@ -57,7 +59,8 @@ class UpdatePropertyForm extends Component {
   }
 
   render() {
-    const property = JSON.parse(localStorage.property);
+    let { property } = this.state;
+    console.log(property);
     const styles = {
       form: {
         width: '360px',
@@ -123,7 +126,7 @@ class UpdatePropertyForm extends Component {
             <div className="form-group">
               <label for="inputPhone" className="col-lg-2 control-label">Phone</label>
               <div className="col-lg-10">
-                <input required onChange={ this.handleInputChange }  name="telephone" type="number" className="form-control" id="inputPhone" value={property.phone} />
+                <input required onChange={ this.handleInputChange }  name="telephone" type="number" className="form-control" id="inputPhone" value={property.telephone} />
               </div>
             </div>
             <div className="form-group">
@@ -135,96 +138,96 @@ class UpdatePropertyForm extends Component {
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Cats Allowed</label>
               <div className="col-lg-10">
-                <select required onChange={ this.handleInputChange }  name="isCatsOk" className="form-control" id="select">
+                <select required onChange={ this.handleInputChange } value={property.isCatsOk} name="isCatsOk" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.isCatsOk ? <option value="false">No</option> : <option selected value="false">No</option> }
-                  {property.isCatsOk ? <option value="true">Yes</option> : <option selected value="true">Yes</option> }
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
                 </select>
               </div>
             </div>
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Dogs Allowed</label>
               <div className="col-lg-10">
-                <select required onChange={ this.handleInputChange }  name="isDogsOk" className="form-control" id="select">
+                <select required onChange={ this.handleInputChange } value={property.isDogsOk}  name="isDogsOk" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.isDogsOk ? <option value="false">No</option> : <option selected value="false">No</option> }
-                  {property.isDogsOk ? <option value="true">Yes</option> : <option selected value="true">Yes</option> }
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
                 </select>
               </div>
             </div>
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Furnished</label>
               <div className="col-lg-10">
-                <select required onChange={ this.handleInputChange }  name="furnished" className="form-control" id="select">
+                <select required onChange={ this.handleInputChange }  value={property.furnished} name="furnished" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.furnished ? <option value="false">No</option> : <option selected value="false">No</option> }
-                  {property.furnished ? <option value="true">Yes</option> : <option selected value="true">Yes</option> }
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
                 </select>
               </div>
             </div>
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Wheel Chair Access</label>
               <div className="col-lg-10">
-                <select required onChange={ this.handleInputChange }  name="wheelChairAccess" className="form-control" id="select">
+                <select required onChange={ this.handleInputChange }  value={property.wheelChairAccess} name="wheelChairAccess" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.wheelChairAccess ? <option value="false">No</option> : <option selected value="false">No</option> }
-                  {property.wheelChairAccess ? <option value="true">Yes</option> : <option selected value="true">Yes</option> }
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
                 </select>
               </div>
             </div>
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Smoking Allowed</label>
               <div className="col-lg-10">
-                <select required onChange={ this.handleInputChange }  name="smoking" className="form-control" id="select">
+                <select required onChange={ this.handleInputChange } value={property.furnished} name="smoking" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.smoking ? <option value="false">No</option> : <option selected value="false">No</option> }
-                  {property.smoking ? <option value="true">Yes</option> : <option selected value="true">Yes</option> }
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
                 </select>
               </div>
             </div>
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Housing Type</label>
               <div required className="col-lg-10">
-                <select onChange={ this.handleInputChange }  name="houseType" className="form-control" id="select">
+                <select onChange={ this.handleInputChange } value={property.houseType} name="houseType" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.houseType == 'Apartment' ? <option selected >Apartment</option>: <option>Apartment</option> }
-                  {property.houseType == 'Condo' ? <option selected>Condo</option> : <option>Condo</option> }
-                  {property.houseType == 'Cottage/Cabin' ? <option selected>Cottage/Cabin</option> : <option>Cottage/Cabin</option> }
-                  {property.houseType == 'Duplex' ? <option selected>Duplex</option> : <option>Duplex</option> }
-                  {property.houseType == 'Flat' ? <option selected>Flat</option> : <option>Flat</option> }
-                  {property.houseType == 'House' ? <option selected>House</option> : <option>House</option> }
-                  {property.houseType == 'In-Law' ? <option selected>In-Law</option> : <option>In-Law</option> }
-                  {property.houseType == 'Loft' ? <option selected>Loft</option> : <option>Loft</option> }
-                  {property.houseType == 'Assisted Living' ? <option selected>Assisted Living</option> : <option>Assisted Living</option> }
-                  {property.houseType == 'land' ? <option selected>land</option> : <option>land</option> }
+                  <option>Apartment</option>
+                  <option>Condo</option>
+                  <option>Cottage/Cabin</option>
+                  <option>Duplex</option>
+                  <option>Flat</option>
+                  <option>House</option>
+                  <option>In-Law</option>
+                  <option>Loft</option>
+                  <option>Assisted Living</option>
+                  <option>land</option>
                 </select>
               </div>
             </div>
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Parking</label>
               <div className="col-lg-10">
-                <select required onChange={ this.handleInputChange }  name="parking" className="form-control" id="select">
+                <select required onChange={ this.handleInputChange } value={property.parking} name="parking" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.houseType == 'Carport' ? <option selected >Carport</option>: <option>Carport</option> }
-                  {property.houseType == 'Attached Garage' ? <option selected>Attached Garage</option> : <option>Attached Garage</option> }
-                  {property.houseType == 'Detached Garage' ? <option selected>Detached Garage</option> : <option>Detached Garage</option> }
-                  {property.houseType == 'Off-Street Parking' ? <option selected>Off-Street Parking</option> : <option>Off-Street Parking</option> }
-                  {property.houseType == 'Street Parking' ? <option selected>Street Parking</option> : <option>Street Parking</option> }
-                  {property.houseType == 'Valet Parking' ? <option selected>Valet Parking</option> : <option>Valet Parking</option> }
-                  {property.houseType == 'No Parking<' ? <option selected>No Parking</option> : <option>No Parking</option> }
+                  <option>Carport</option>
+                  <option>Attached Garage</option>
+                  <option>Detached Garage</option>
+                  <option>Off-Street Parking</option>
+                  <option>Street Parking</option>
+                  <option>Valet Parking</option>
+                  <option>No Parking</option>
                 </select>
               </div>
             </div>
             <div className="form-group">
               <label for="select" className="col-lg-2 control-label">Laundry</label>
               <div className="col-lg-10">
-                <select required onChange={ this.handleInputChange }  name="laundry" className="form-control" id="select">
+                <select required onChange={ this.handleInputChange } value={property.laundry}  name="laundry" className="form-control" id="select">
                   <option value=''>--Select Option--</option>
-                  {property.houseType == 'W/D In Unit' ? <option selected >W/D In Unit</option>: <option>W/D In Unit</option> }
-                  {property.houseType == 'W/D Hookups' ? <option selected>W/D Hookups</option> : <option>W/D Hookups</option> }
-                  {property.houseType == 'Laundry In Bldg' ? <option selected>Laundry In Bldg</option> : <option>Laundry In Bldg</option> }
-                  {property.houseType == 'Laundry On Site' ? <option selected>Laundry On Site</option> : <option>Laundry On Site</option> }
-                  {property.houseType == 'No Laundry On Site' ? <option selected>Valet Parking</option> : <option>Valet Parking</option> }
+                  <option>W/D In Unit</option>
+                  <option>W/D Hookups</option>
+                  <option>Laundry In Bldg</option>
+                  <option>Laundry On Site</option>
+                  <option>Valet Parking</option>
                 </select>
               </div>
             </div>
