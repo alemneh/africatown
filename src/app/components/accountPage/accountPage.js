@@ -3,6 +3,7 @@ import SeekerInfo from '../SeekerInfo/SeekerInfo';
 import ProviderInfo from '../ProviderInfo/ProviderInfo';
 import ProviderEditForm from '../ProviderEditForm/ProviderEditForm';
 import SeekerEditForm from '../SeekerEditForm/SeekerEditForm';
+import { browserHistory } from 'react-router';
 import axios from 'axios';
 
 
@@ -15,6 +16,8 @@ class AccountPage extends Component {
     }
 
     this.toggleEditMode = this.toggleEditMode.bind(this);
+    this.handleRemoveUser = this.handleRemoveUser.bind(this);
+    this.handelUpdateUser = this.handelUpdateUser.bind(this);
   }
 
   componentWillMount() {
@@ -61,34 +64,61 @@ class AccountPage extends Component {
       })
   }
 
+  handleRemoveUser(e) {
+    console.log('Hit 1');
+    e.preventDefault();
+    console.log('Hit 2');
+    const { userId, token } = localStorage;
+    const url = process.env.URL + '/users/' + userId;
+    axios.delete(url)
+      .then((res) => {
+        console.log(res);
+        localStorage.clear();
+        browserHistory.push('/');
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
   toggleEditMode() {
     this.setState( { isEditMode: !this.state.isEditMode });
   }
 
   renderAccountInfo() {
-    let { isEditMode, user, handleInputChange } = this.state;
+    let { isEditMode, user } = this.state;
+    const { handleInputChange,
+            handelUpdateUser,
+            handleRemoveUser,
+          } = this;
+
     if(isEditMode) {
 
       if(user.userType == 'provider') {
         return (
           <ProviderEditForm user={user} toggleEditMode={this.toggleEditMode}
-                            handleInputChange={handleInputChange}/>
+                            handleInputChange={handleInputChange}
+                            handelUpdateUser={handelUpdateUser}/>
         )
       } else {
         return (
           <SeekerEditForm user={user} toggleEditMode={this.toggleEditMode}
-                            handleInputChange={handleInputChange}/>
+                            handleInputChange={handleInputChange}
+                            handelUpdateUser={handelUpdateUser}/>
         )
       }
 
     } else {
       if(user.userType == 'provider') {
+        console.log(handleRemoveUser);
         return (
-          <ProviderInfo user={user} toggleEditMode={this.toggleEditMode}/>
+          <ProviderInfo user={user} toggleEditMode={this.toggleEditMode}
+                        handleRemoveUser={handleRemoveUser}/>
         )
       }
       return (
-        <SeekerInfo user={user} toggleEditMode={this.toggleEditMode}/>
+        <SeekerInfo user={user} toggleEditMode={this.toggleEditMode}
+                    handleRemoveUser={handleRemoveUser}/>
       )
     }
   }

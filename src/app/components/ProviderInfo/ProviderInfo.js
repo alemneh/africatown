@@ -1,7 +1,8 @@
 import React from 'react';
 
 
-const ProviderInfo = ({ user, toggleEditMode, deleteAccount }) => {
+const ProviderInfo = ({ user, toggleEditMode, handleRemoveUser }) => {
+  console.log(handleRemoveUser);
   const styles = {
     img: {
       margin: '10px'
@@ -21,7 +22,7 @@ const ProviderInfo = ({ user, toggleEditMode, deleteAccount }) => {
       <h3><b>Email:</b> {user.email}</h3>
       <div>
         <a onClick={ toggleEditMode } style={styles.img} href="#" className="btn btn-warning">Edit</a>
-        <a onClick={ deleteAccount } style={styles.img} href="#" className="btn btn-danger">Delete</a>
+        <a onClick={ handleRemoveUser } style={styles.img} href="#" className="btn btn-danger">Delete</a>
       </div>
     </div>
   )

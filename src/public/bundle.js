@@ -49200,6 +49200,8 @@
 
 	var _SeekerEditForm2 = _interopRequireDefault(_SeekerEditForm);
 
+	var _reactRouter = __webpack_require__(173);
+
 	var _axios = __webpack_require__(387);
 
 	var _axios2 = _interopRequireDefault(_axios);
@@ -49226,6 +49228,8 @@
 	    };
 
 	    _this.toggleEditMode = _this.toggleEditMode.bind(_this);
+	    _this.handleRemoveUser = _this.handleRemoveUser.bind(_this);
+	    _this.handelUpdateUser = _this.handelUpdateUser.bind(_this);
 	    return _this;
 	  }
 
@@ -49283,6 +49287,25 @@
 	      });
 	    }
 	  }, {
+	    key: 'handleRemoveUser',
+	    value: function handleRemoveUser(e) {
+	      console.log('Hit 1');
+	      e.preventDefault();
+	      console.log('Hit 2');
+	      var _localStorage3 = localStorage,
+	          userId = _localStorage3.userId,
+	          token = _localStorage3.token;
+
+	      var url = ("http://localhost:3000") + '/users/' + userId;
+	      _axios2.default.delete(url).then(function (res) {
+	        console.log(res);
+	        localStorage.clear();
+	        _reactRouter.browserHistory.push('/');
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
 	    key: 'toggleEditMode',
 	    value: function toggleEditMode() {
 	      this.setState({ isEditMode: !this.state.isEditMode });
@@ -49292,23 +49315,31 @@
 	    value: function renderAccountInfo() {
 	      var _state = this.state,
 	          isEditMode = _state.isEditMode,
-	          user = _state.user,
-	          handleInputChange = _state.handleInputChange;
+	          user = _state.user;
+	      var handleInputChange = this.handleInputChange,
+	          handelUpdateUser = this.handelUpdateUser,
+	          handleRemoveUser = this.handleRemoveUser;
+
 
 	      if (isEditMode) {
 
 	        if (user.userType == 'provider') {
 	          return _react2.default.createElement(_ProviderEditForm2.default, { user: user, toggleEditMode: this.toggleEditMode,
-	            handleInputChange: handleInputChange });
+	            handleInputChange: handleInputChange,
+	            handelUpdateUser: handelUpdateUser });
 	        } else {
 	          return _react2.default.createElement(_SeekerEditForm2.default, { user: user, toggleEditMode: this.toggleEditMode,
-	            handleInputChange: handleInputChange });
+	            handleInputChange: handleInputChange,
+	            handelUpdateUser: handelUpdateUser });
 	        }
 	      } else {
 	        if (user.userType == 'provider') {
-	          return _react2.default.createElement(_ProviderInfo2.default, { user: user, toggleEditMode: this.toggleEditMode });
+	          console.log(handleRemoveUser);
+	          return _react2.default.createElement(_ProviderInfo2.default, { user: user, toggleEditMode: this.toggleEditMode,
+	            handleRemoveUser: handleRemoveUser });
 	        }
-	        return _react2.default.createElement(_SeekerInfo2.default, { user: user, toggleEditMode: this.toggleEditMode });
+	        return _react2.default.createElement(_SeekerInfo2.default, { user: user, toggleEditMode: this.toggleEditMode,
+	          handleRemoveUser: handleRemoveUser });
 	      }
 	    }
 	  }, {
@@ -49351,7 +49382,7 @@
 	var SeekerInfo = function SeekerInfo(_ref) {
 	  var user = _ref.user,
 	      toggleEditMode = _ref.toggleEditMode,
-	      deleteAccount = _ref.deleteAccount;
+	      handleRemoveUser = _ref.handleRemoveUser;
 
 	  var styles = {
 	    img: {
@@ -49603,7 +49634,7 @@
 	      ),
 	      _react2.default.createElement(
 	        'a',
-	        { onClick: deleteAccount, style: styles.img, href: '#', className: 'btn btn-danger' },
+	        { onClick: handleRemoveUser, style: styles.img, href: '#', className: 'btn btn-danger' },
 	        'Delete'
 	      )
 	    )
@@ -49631,8 +49662,9 @@
 	var ProviderInfo = function ProviderInfo(_ref) {
 	  var user = _ref.user,
 	      toggleEditMode = _ref.toggleEditMode,
-	      deleteAccount = _ref.deleteAccount;
+	      handleRemoveUser = _ref.handleRemoveUser;
 
+	  console.log(handleRemoveUser);
 	  var styles = {
 	    img: {
 	      margin: '10px'
@@ -49740,7 +49772,7 @@
 	      ),
 	      _react2.default.createElement(
 	        'a',
-	        { onClick: deleteAccount, style: styles.img, href: '#', className: 'btn btn-danger' },
+	        { onClick: handleRemoveUser, style: styles.img, href: '#', className: 'btn btn-danger' },
 	        'Delete'
 	      )
 	    )

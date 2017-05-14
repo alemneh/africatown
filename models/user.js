@@ -10,6 +10,8 @@ module.exports = function(mongoose, models) {
     userType: String,
     password: String,
     title: String,
+    address: String,
+    telephone: Number,
     city: String,
     state: String,
     email: String,

@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const SeekerInfo = ({ user, toggleEditMode, deleteAccount }) => {
+const SeekerInfo = ({ user, toggleEditMode, handleRemoveUser }) => {
   const styles = {
     img: {
       margin: '10px'
@@ -34,7 +34,7 @@ const SeekerInfo = ({ user, toggleEditMode, deleteAccount }) => {
       <h3><b>Household Size:</b> {user.houseHoldSize}</h3>
       <div>
         <a onClick={ toggleEditMode } style={styles.img} href="#" className="btn btn-warning">Edit</a>
-        <a onClick={ deleteAccount } style={styles.img} href="#" className="btn btn-danger">Delete</a>
+        <a onClick={ handleRemoveUser } style={styles.img} href="#" className="btn btn-danger">Delete</a>
       </div>
     </div>
   )
