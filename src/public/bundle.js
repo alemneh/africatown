@@ -42279,13 +42279,13 @@
 	        { className: 'form-group' },
 	        _react2.default.createElement(
 	          'label',
-	          { 'for': 'textArea', className: 'col-lg-2 control-label' },
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
 	          'How do you see yourself contributing to the Africatown vision for preserving and developing the Black community in the Central District?'
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-lg-10' },
-	          _react2.default.createElement('textarea', { required: true, onChange: handleInputChange, name: 'contribution', className: 'form-control', rows: '3', id: 'textArea' })
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'contribution', type: 'text', className: 'form-control', id: 'inputZipcode' })
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -42909,7 +42909,7 @@
 	        'DOB:'
 	      ),
 	      ' ',
-	      user.dob
+	      user.dob.slice(0, 10)
 	    ),
 	    _react2.default.createElement(
 	      'h3',
@@ -43792,13 +43792,13 @@
 	        { className: 'form-group' },
 	        _react2.default.createElement(
 	          'label',
-	          { 'for': 'textArea', className: 'col-lg-2 control-label' },
+	          { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
 	          'How do you see yourself contributing to the Africatown vision for preserving and developing the Black community in the Central District?'
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'col-lg-10' },
-	          _react2.default.createElement('textarea', { name: 'contribution', className: 'form-control', rows: '3', id: 'textArea', value: user.contribution })
+	          _react2.default.createElement('input', { required: true, onChange: handleInputChange, name: 'contribution', type: 'text', className: 'form-control', id: 'inputZipcode', value: user.contribution })
 	        )
 	      ),
 	      _react2.default.createElement(

@@ -148,10 +148,10 @@ const SeekerComponent = ({handelSignUp, handleInputChange}) => {
           </div>
         </div>
         <div className="form-group">
-           <label for="textArea" className="col-lg-2 control-label">How do you see yourself contributing to the Africatown vision for preserving and developing the Black community in the Central District?</label>
-           <div className="col-lg-10">
-             <textarea required onChange={ handleInputChange } name="contribution" className="form-control" rows="3" id="textArea"></textarea>
-           </div>
+          <label for="inputZipcode" className="col-lg-2 control-label">How do you see yourself contributing to the Africatown vision for preserving and developing the Black community in the Central District?</label>
+          <div className="col-lg-10">
+            <input required onChange={ handleInputChange }  name="contribution" type="text" className="form-control" id="inputZipcode" />
+          </div>
         </div>
         <div className="form-group">
           <label for="select" className="col-lg-2 control-label">If you want to live in the Central District but currently do not, what is the main barrier stopping you from living here?</label>

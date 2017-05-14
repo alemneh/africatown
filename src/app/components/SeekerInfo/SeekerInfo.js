@@ -18,7 +18,7 @@ const SeekerInfo = ({ user, toggleEditMode, handleRemoveUser }) => {
       <h3><b>Zip Code:</b> {user.zipCode}</h3>
       <h3><b>Phone:</b> {user.telephone}</h3>
       <h3><b>Email:</b> {user.email}</h3>
-      <h3><b>DOB:</b> {user.dob}</h3>
+      <h3><b>DOB:</b> {user.dob.slice(0,10)}</h3>
       <h3><b>Race/Ethnicity:</b> {user.race}</h3>
       <h3><b>Profession:</b> {user.profession}</h3>
       <h3><b>Income Level:</b> {user.income}</h3>
