@@ -38,7 +38,6 @@ class SignUpForm extends Component {
     axios.post(process.env.URL + '/users', newUser)
       .then((res) => {
         console.log(res);
-        localStorage.token = res.data.token;
         browserHistory.push('/');
       })
       .catch((err) => {

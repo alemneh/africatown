@@ -18,6 +18,7 @@ class AccountPage extends Component {
     this.toggleEditMode = this.toggleEditMode.bind(this);
     this.handleRemoveUser = this.handleRemoveUser.bind(this);
     this.handelUpdateUser = this.handelUpdateUser.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentWillMount() {
@@ -101,6 +102,7 @@ class AccountPage extends Component {
                             handelUpdateUser={handelUpdateUser}/>
         )
       } else {
+        console.log(user);
         return (
           <SeekerEditForm user={user} toggleEditMode={this.toggleEditMode}
                             handleInputChange={handleInputChange}

@@ -1,6 +1,12 @@
 import React from 'react';
 
-const SeekerEditFormComponent = ({handelSignUp, handleInputChange}) => {
+const SeekerEditFormComponent = ({
+  handelUpdateUser,
+  handleInputChange,
+  toggleEditMode,
+  user
+}) => {
+  console.log(user.dob.slice(0,10));
   const styles = {
     form: {
       width: '360px',
@@ -11,7 +17,7 @@ const SeekerEditFormComponent = ({handelSignUp, handleInputChange}) => {
     }
   }
   return (
-    <form  onSubmit={ handelSignUp } className="form-horizontal">
+    <form  onSubmit={ handelUpdateUser } className="form-horizontal">
       <fieldset>
         <legend>Edit Info Seeker</legend>
         <div className="form-group">
@@ -59,7 +65,7 @@ const SeekerEditFormComponent = ({handelSignUp, handleInputChange}) => {
         <div className="form-group">
           <label for="inputZipcode" className="col-lg-2 control-label">Date of Birth</label>
           <div className="col-lg-10">
-            <input required onChange={ handleInputChange }  name="dob" type="date" className="form-control" id="inputZipcode" value={user.dob} />
+            <input required onChange={ handleInputChange }  name="dob" type="date" className="form-control" id="inputZipcode" value={user.dob.slice(0,10)} />
           </div>
         </div>
         <div className="form-group">
@@ -175,7 +181,7 @@ const SeekerEditFormComponent = ({handelSignUp, handleInputChange}) => {
         </div>
         <div className="form-group">
           <div className="col-lg-10 col-lg-offset-2">
-            <button style={styles.btn} type="reset" className="btn btn-default">Cancel</button>
+            <button style={styles.btn} onClick={toggleEditMode} className="btn btn-default">Cancel</button>
             <button style={styles.btn} type="submit" className="btn btn-primary">Submit</button>
           </div>
         </div>

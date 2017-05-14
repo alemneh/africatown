@@ -150,7 +150,7 @@ const SeekerComponent = ({handelSignUp, handleInputChange}) => {
         <div className="form-group">
            <label for="textArea" className="col-lg-2 control-label">How do you see yourself contributing to the Africatown vision for preserving and developing the Black community in the Central District?</label>
            <div className="col-lg-10">
-             <textarea name="contribution" className="form-control" rows="3" id="textArea"></textarea>
+             <textarea required onChange={ handleInputChange } name="contribution" className="form-control" rows="3" id="textArea"></textarea>
            </div>
         </div>
         <div className="form-group">
