@@ -13,7 +13,7 @@ const propertyDetailsEdit = () => {
   const deleteProperty = () => {
     const {userId, token} = localStorage;
     const property = JSON.parse(localStorage.property);
-    const url = process.env.URL + '/users/' + userId +'/properties/' + property._id;
+    const url = process.env.URL + '/users/' + property._owner +'/properties/' + property._id;
     axios.delete(url)
       .then((res) => {
         console.log(res);

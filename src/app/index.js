@@ -11,12 +11,17 @@ import AccountPage from './components/accountPage/accountPage';
 import PropertyDetails from './components/propertyDetails/propertyDetails';
 import propertyDetailsEdit from './components/propertyDetailsEdit/propertyDetailsEdit';
 import propertyDetailsEditForm from './components/propFormEdit/propFormEdit';
+import AdminDashBoard from './components/AdminDashBoard/AdminDashBoard';
+import AdminPropertyDetails from './components/propertyDetailsEdit/propertyDetailsEdit';
 import App from './App';
 
 
 const routes = (
   <Route path="/" component={App}>
     <IndexRoute component={HomePage}/>
+    <Route path="/admin" component={AdminDashBoard} />
+    <Route path="/admin-property" component={AdminPropertyDetails} />
+    <Route path="/admin-user" component={AccountPage} />
     <Route path="/properties-list" component={PropertyList} />
     <Route path="/account" component={AccountPage} />
     <Route path="/properties-edit" component={PropertyListEdit} />

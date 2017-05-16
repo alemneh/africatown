@@ -101,6 +101,10 @@
 
 	var _propFormEdit2 = _interopRequireDefault(_propFormEdit);
 
+	var _AdminDashBoard = __webpack_require__(494);
+
+	var _AdminDashBoard2 = _interopRequireDefault(_AdminDashBoard);
+
 	var _App = __webpack_require__(448);
 
 	var _App2 = _interopRequireDefault(_App);
@@ -111,6 +115,9 @@
 	  _reactRouter.Route,
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _home2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/admin', component: _AdminDashBoard2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/admin-property', component: _propertyDetailsEdit2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/admin-user', component: _accountPage2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/properties-list', component: _PropertyList2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/account', component: _accountPage2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/properties-edit', component: _propertyListEdit2.default }),
@@ -44173,7 +44180,7 @@
 	        token = _localStorage.token;
 
 	    var property = JSON.parse(localStorage.property);
-	    var url = ("http://localhost:3000") + '/users/' + userId + '/properties/' + property._id;
+	    var url = ("http://localhost:3000") + '/users/' + property._owner + '/properties/' + property._id;
 	    _axios2.default.delete(url).then(function (res) {
 	      console.log(res);
 	      localStorage.property = '';
@@ -50488,6 +50495,262 @@
 	};
 
 	exports.default = new Typography();
+
+/***/ }),
+/* 494 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _AdminUser = __webpack_require__(495);
+
+	var _AdminUser2 = _interopRequireDefault(_AdminUser);
+
+	var _AdminProperty = __webpack_require__(496);
+
+	var _AdminProperty2 = _interopRequireDefault(_AdminProperty);
+
+	var _reactRouter = __webpack_require__(173);
+
+	var _axios = __webpack_require__(387);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AdminDashBoard = function (_Component) {
+	  _inherits(AdminDashBoard, _Component);
+
+	  function AdminDashBoard(props) {
+	    _classCallCheck(this, AdminDashBoard);
+
+	    var _this = _possibleConstructorReturn(this, (AdminDashBoard.__proto__ || Object.getPrototypeOf(AdminDashBoard)).call(this, props));
+
+	    _this.state = {
+	      users: null,
+	      properties: null
+	    };
+	    return _this;
+	  }
+
+	  _createClass(AdminDashBoard, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.fetchUsers();
+	      this.fetchProperties();
+	    }
+	  }, {
+	    key: 'fetchUsers',
+	    value: function fetchUsers() {
+	      var _this2 = this;
+
+	      var url = ("http://localhost:3000") + '/users';
+	      _axios2.default.get(url).then(function (res) {
+	        console.log(res);
+	        _this2.setState({ users: res.data.users });
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
+	    key: 'handleViewUser',
+	    value: function handleViewUser(user) {
+	      console.log(user);
+	      localStorage.user = JSON.stringify(user);
+	      localStorage.userId = user._id;
+	      _reactRouter.browserHistory.push("/admin-user");
+	    }
+	  }, {
+	    key: 'handleViewProperty',
+	    value: function handleViewProperty(property) {
+	      console.log(property);
+	      localStorage.property = JSON.stringify(property);
+	      _reactRouter.browserHistory.push("/admin-property");
+	    }
+	  }, {
+	    key: 'fetchProperties',
+	    value: function fetchProperties() {
+	      var _this3 = this;
+
+	      var url = ("http://localhost:3000") + '/properties';
+	      _axios2.default.get(url).then(function (res) {
+	        console.log(res);
+	        _this3.setState({ properties: res.data.properties });
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
+	    key: 'renderUsers',
+	    value: function renderUsers() {
+	      var _this4 = this;
+
+	      var users = this.state.users;
+
+	      if (!users) {
+	        return _react2.default.createElement(
+	          'p',
+	          null,
+	          'No users.'
+	        );
+	      } else {
+	        return users.map(function (user, index) {
+	          return _react2.default.createElement(_AdminUser2.default, { key: index, user: user,
+	            index: index,
+	            handleViewUser: _this4.handleViewUser });
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'renderProperties',
+	    value: function renderProperties() {
+	      var _this5 = this;
+
+	      var properties = this.state.properties;
+
+	      if (!properties) {
+	        return _react2.default.createElement(
+	          'p',
+	          null,
+	          'No properties.'
+	        );
+	      } else {
+	        return properties.map(function (property, index) {
+	          return _react2.default.createElement(_AdminProperty2.default, { key: index, property: property,
+	            index: index,
+	            handleViewProperty: _this5.handleViewProperty });
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'section',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Admin Board'
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Users'
+	        ),
+	        this.renderUsers(),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Properties'
+	        ),
+	        this.renderProperties()
+	      );
+	    }
+	  }]);
+
+	  return AdminDashBoard;
+	}(_react.Component);
+
+	exports.default = AdminDashBoard;
+
+/***/ }),
+/* 495 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UserComponent = function UserComponent(_ref) {
+	  var index = _ref.index,
+	      user = _ref.user,
+	      handleViewUser = _ref.handleViewUser;
+
+
+	  return _react2.default.createElement(
+	    "div",
+	    null,
+	    _react2.default.createElement(
+	      "a",
+	      { href: "#", className: "list-group-item",
+	        onClick: function onClick() {
+	          return handleViewUser(user);
+	        }
+	      },
+	      index + 1,
+	      ". ",
+	      user.name
+	    )
+	  );
+	};
+
+	exports.default = UserComponent;
+
+/***/ }),
+/* 496 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PropertyComponent = function PropertyComponent(_ref) {
+	  var index = _ref.index,
+	      property = _ref.property,
+	      handleViewProperty = _ref.handleViewProperty;
+
+
+	  return _react2.default.createElement(
+	    "div",
+	    null,
+	    _react2.default.createElement(
+	      "a",
+	      { href: "#", className: "list-group-item",
+	        onClick: function onClick() {
+	          return handleViewProperty(property);
+	        }
+	      },
+	      index + 1,
+	      ". ",
+	      property.address
+	    )
+	  );
+	};
+
+	exports.default = PropertyComponent;
 
 /***/ })
 /******/ ]);
