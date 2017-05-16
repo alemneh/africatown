@@ -42764,7 +42764,6 @@
 	        }
 	      } else {
 	        if (user.userType == 'provider') {
-	          console.log(handleRemoveUser);
 	          return _react2.default.createElement(_ProviderInfo2.default, { user: user, toggleEditMode: this.toggleEditMode,
 	            handleRemoveUser: handleRemoveUser });
 	        }
@@ -42909,7 +42908,7 @@
 	        'DOB:'
 	      ),
 	      ' ',
-	      user.dob.slice(0, 10)
+	      user.dob
 	    ),
 	    _react2.default.createElement(
 	      'h3',

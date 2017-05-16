@@ -112,7 +112,6 @@ class AccountPage extends Component {
 
     } else {
       if(user.userType == 'provider') {
-        console.log(handleRemoveUser);
         return (
           <ProviderInfo user={user} toggleEditMode={this.toggleEditMode}
                         handleRemoveUser={handleRemoveUser}/>
