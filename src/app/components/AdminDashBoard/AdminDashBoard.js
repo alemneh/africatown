@@ -14,6 +14,8 @@ class AdminDashBoard extends Component {
   }
 
   componentWillMount() {
+    const { token, isAdmin } = localStorage;
+    if(isAdmin == 'false') browserHistory.push('/');
     this.fetchUsers();
     this.fetchProperties();
   }

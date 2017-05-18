@@ -21,8 +21,10 @@ class AddPropertyForm extends Component {
   }
 
   componentWillMount() {
-    const token = localStorage.getItem('token');
-    if(!token) browserHistory.push('/signin-form');
+    const {token, userType } = localStorage;
+    if(!token) return browserHistory.push('/signin-form');
+    if(userType != 'provider') browserHistory.push('/');
+
   }
 
   handleInputChange(e) {

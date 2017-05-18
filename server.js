@@ -15,6 +15,31 @@ require('./controllers/login-controller')(loginRouter, models);
 require('./controllers/user-controller')(userRouter, models);
 require('./controllers/property-controller')(propertyRouter, models);
 
+var multer  = require('multer');
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, __dirname + '/uploads');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+  }
+})
+
+var upload = multer({ storage: storage })
+
+
+app.post('/files', upload.any(), function (req, res) {
+
+  console.log(req.files);
+  console.log(req.file);
+  console.log(req.body);
+  res.json({hit: req.files});
+
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+});
+
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 

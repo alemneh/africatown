@@ -69,13 +69,17 @@ class AccountPage extends Component {
     console.log('Hit 1');
     e.preventDefault();
     console.log('Hit 2');
-    const { userId, token } = localStorage;
+    const { userId, token, isAdmin } = localStorage;
     const url = process.env.URL + '/users/' + userId;
     axios.delete(url)
       .then((res) => {
         console.log(res);
-        localStorage.clear();
-        browserHistory.push('/');
+        if(isAdmin == 'true') {
+          browserHistory.push('/admin');
+        } else {
+          localStorage.clear();
+          browserHistory.push('/');
+        }
       })
       .catch((err) => {
         console.log(err);

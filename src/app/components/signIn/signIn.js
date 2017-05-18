@@ -40,6 +40,8 @@ class SignInForm extends Component {
     .then((res) => {
       console.log(res);
       localStorage.token = res.data.token;
+      localStorage.userType = res.data.user.userType;
+      localStorage.isAdmin = res.data.user.isAdmin ? 'true' : 'false';
       localStorage.userId = res.data.user._id;
       browserHistory.push('/');
 

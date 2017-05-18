@@ -8,6 +8,7 @@ module.exports = function(mongoose, models) {
     name: String,
     organization: String,
     userType: String,
+    isAdmin: { type: Boolean, default: false},
     password: String,
     title: String,
     address: String,

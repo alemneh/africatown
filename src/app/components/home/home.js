@@ -54,6 +54,10 @@ class Home extends Component {
           <Link to="/properties-list"><RaisedButton label="Seekers" primary={true} style={style} /></Link>
           <Link to="/add-property"><RaisedButton label="Providers" secondary={true} style={style} /></Link>
         </div>
+        <form name="myForm" action="/files"  method="post" enctype="multipart/form-data">
+          <input type="file"  name="propertyImage"/>
+          <button type="submit">Upload</button>
+        </form>
       </section>
     )
   }

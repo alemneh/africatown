@@ -1,5 +1,6 @@
 'use strict';
 
+
 const UserRoutes =require('../routes/user-routes');
 
 module.exports = (userRouter, models) => {
@@ -18,4 +19,6 @@ module.exports = (userRouter, models) => {
 
   userRouter.route('/users/:id/properties/:propId')
     .delete((req, res) => {UserRoutes.removeAProperty(req, res);});
+
+  
 };
