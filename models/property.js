@@ -24,6 +24,8 @@ module.exports = (mongoose, models) => {
     city: String,
     state: String,
     zipCode: Number
+  },{
+    timestamps: true
   });
 
   const Property = mongoose.model('Property', propertySchema);

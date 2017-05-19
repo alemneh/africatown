@@ -8,6 +8,7 @@ const models = {};
 
 require('./user')(mongoose, models);
 require('./property')(mongoose, models);
+require('./image')(mongoose, models);
 
 
 
