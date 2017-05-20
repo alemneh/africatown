@@ -38613,10 +38613,15 @@
 	    var _this = _possibleConstructorReturn(this, (AddPropertyForm.__proto__ || Object.getPrototypeOf(AddPropertyForm)).call(this, props));
 
 	    _this.state = {
-	      newProperty: {}
+	      newProperty: {},
+	      file: '',
+	      addPhoto: false,
+	      photos: []
 	    };
 	    _this.handleInputChange = _this.handleInputChange.bind(_this);
 	    _this.handelAddProperty = _this.handelAddProperty.bind(_this);
+	    _this.handleFileChange = _this.handleFileChange.bind(_this);
+	    _this.renderPhotos = _this.renderPhotos.bind(_this);
 	    return _this;
 	  }
 
@@ -38629,6 +38634,34 @@
 
 	      if (!token) return _reactRouter.browserHistory.push('/signin-form');
 	      if (userType != 'provider') _reactRouter.browserHistory.push('/');
+	    }
+	  }, {
+	    key: 'handleFileChange',
+	    value: function handleFileChange(e) {
+	      e.preventDefault();
+	      console.log(e.target.files[0]);
+	    }
+	  }, {
+	    key: 'renderPhotos',
+	    value: function renderPhotos() {
+	      var _state = this.state,
+	          addPhoto = _state.addPhoto,
+	          photos = _state.photos;
+
+	      if (photos.length < 1) {
+	        for (var i = 0; i < 4; i++) {
+	          return _react2.default.createElement(
+	            'form',
+	            null,
+	            _react2.default.createElement('input', { type: 'file', onChange: this.handleFileChange }),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'submit' },
+	              'Upload'
+	            )
+	          );
+	        }
+	      }
 	    }
 	  }, {
 	    key: 'handleInputChange',
@@ -38644,6 +38677,8 @@
 	  }, {
 	    key: 'handelAddProperty',
 	    value: function handelAddProperty(e) {
+	      var _this2 = this;
+
 	      e.preventDefault();
 	      var _localStorage2 = localStorage,
 	          userId = _localStorage2.userId,
@@ -38652,7 +38687,8 @@
 	      var url = ("http://localhost:3000") + '/users/' + userId + '/properties/';
 	      _axios2.default.post(url, this.state.newProperty).then(function (res) {
 	        console.log(res);
-	        _reactRouter.browserHistory.push('/properties-list');
+	        _this2.setState({ addPhoto: true });
+	        // browserHistory.push('/properties-list');
 	      }).catch(function (err) {
 	        console.log(err);
 	      });
@@ -38669,536 +38705,545 @@
 	          marginRight: '25px'
 	        }
 	      };
-	      return _react2.default.createElement(
-	        'section',
-	        { className: 'container' },
-	        _react2.default.createElement(
-	          'form',
-	          { onSubmit: this.handelAddProperty, className: 'form-horizontal' },
+
+	      if (this.state.addPhoto) {
+	        return _react2.default.createElement(
+	          'section',
+	          { className: 'container' },
+	          this.renderPhotos()
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'section',
+	          { className: 'container' },
 	          _react2.default.createElement(
-	            'fieldset',
-	            null,
+	            'form',
+	            { onSubmit: this.handelAddProperty, className: 'form-horizontal' },
 	            _react2.default.createElement(
-	              'legend',
+	              'fieldset',
 	              null,
-	              'Add Property'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
 	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputName', className: 'col-lg-2 control-label' },
-	                'Address'
+	                'legend',
+	                null,
+	                'Add Property'
 	              ),
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'address', type: 'text', className: 'form-control', id: 'inputName', placeholder: 'Address' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputCity', className: 'col-lg-2 control-label' },
-	                'City'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'city', type: 'text', className: 'form-control', id: 'inputCity', placeholder: 'City' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputCity', className: 'col-lg-2 control-label' },
-	                'State'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'state', type: 'text', className: 'form-control', id: 'inputCity', placeholder: 'State' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
-	                'Zip Code'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'zipCode', type: 'number', className: 'form-control', id: 'inputZipcode', placeholder: 'Zip Code' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputEmail', className: 'col-lg-2 control-label' },
-	                'Number of Bedrooms'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'numOfBedrms', type: 'number', className: 'form-control', id: 'inputEmail', placeholder: '2' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputEmail', className: 'col-lg-2 control-label' },
-	                'Number of Bathrooms'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'numOfBathrms', type: 'number', className: 'form-control', id: 'inputEmail', placeholder: '1' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputStreet', className: 'col-lg-2 control-label' },
-	                'Square Feet'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'sqft', type: 'number', className: 'form-control', id: 'inputStreet', placeholder: '700' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputStreet', className: 'col-lg-2 control-label' },
-	                'Price'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'price', type: 'number', className: 'form-control', id: 'inputStreet', placeholder: '950' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputPhone', className: 'col-lg-2 control-label' },
-	                'Phone'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'telephone', type: 'number', className: 'form-control', id: 'inputPhone', placeholder: 'Phone' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
-	                'Manager/Owner'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'manager', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'Manager' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Cats Allowed'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
+	                { className: 'form-group' },
 	                _react2.default.createElement(
-	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'isCatsOk', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'false' },
-	                    'No'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'true' },
-	                    'Yes'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Dogs Allowed'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement(
-	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'isDogsOk', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'false' },
-	                    'No'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'true' },
-	                    'Yes'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Furnished'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement(
-	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'furnished', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'false' },
-	                    'No'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'true' },
-	                    'Yes'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Wheel Chair Access'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement(
-	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'wheelChairAccess', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'false' },
-	                    'No'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'true' },
-	                    'Yes'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Smoking Allowed'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement(
-	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'smoking', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'false' },
-	                    'No'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: 'true' },
-	                    'Yes'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Housing Type'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { required: true, className: 'col-lg-10' },
-	                _react2.default.createElement(
-	                  'select',
-	                  { onChange: this.handleInputChange, name: 'houseType', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Apartment'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Condo'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Cottage/Cabin'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Duplex'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Flat'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'House'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'In-Law'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Loft'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Manufactured'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Assisted Living'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'land'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Parking'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement(
-	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'parking', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Carport'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Attached Garage'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Detached Garage'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Off-Street Parking'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Street Parking'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Valet Parking'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'No Parking'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'select', className: 'col-lg-2 control-label' },
-	                'Laundry'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement(
-	                  'select',
-	                  { required: true, onChange: this.handleInputChange, name: 'laundry', className: 'form-control', id: 'select' },
-	                  _react2.default.createElement(
-	                    'option',
-	                    { value: '' },
-	                    '--Select Option--'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'W/D In Unit'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'W/D Hookups'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Laundry In Bldg'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'Laundry On Site'
-	                  ),
-	                  _react2.default.createElement(
-	                    'option',
-	                    null,
-	                    'No Laundry On Site'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                { 'for': 'inputState', className: 'col-lg-2 control-label' },
-	                'Description'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10' },
-	                _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'description', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'description' })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'col-lg-10 col-lg-offset-2' },
-	                _react2.default.createElement(
-	                  'button',
-	                  { style: styles.btn, type: 'reset', className: 'btn btn-default' },
-	                  'Cancel'
+	                  'label',
+	                  { 'for': 'inputName', className: 'col-lg-2 control-label' },
+	                  'Address'
 	                ),
 	                _react2.default.createElement(
-	                  'button',
-	                  { style: styles.btn, type: 'submit', className: 'btn btn-primary' },
-	                  'Submit'
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'address', type: 'text', className: 'form-control', id: 'inputName', placeholder: 'Address' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	                  'City'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'city', type: 'text', className: 'form-control', id: 'inputCity', placeholder: 'City' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputCity', className: 'col-lg-2 control-label' },
+	                  'State'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'state', type: 'text', className: 'form-control', id: 'inputCity', placeholder: 'State' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputZipcode', className: 'col-lg-2 control-label' },
+	                  'Zip Code'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'zipCode', type: 'number', className: 'form-control', id: 'inputZipcode', placeholder: 'Zip Code' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputEmail', className: 'col-lg-2 control-label' },
+	                  'Number of Bedrooms'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'numOfBedrms', type: 'number', className: 'form-control', id: 'inputEmail', placeholder: '2' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputEmail', className: 'col-lg-2 control-label' },
+	                  'Number of Bathrooms'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'numOfBathrms', type: 'number', className: 'form-control', id: 'inputEmail', placeholder: '1' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputStreet', className: 'col-lg-2 control-label' },
+	                  'Square Feet'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'sqft', type: 'number', className: 'form-control', id: 'inputStreet', placeholder: '700' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputStreet', className: 'col-lg-2 control-label' },
+	                  'Price'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'price', type: 'number', className: 'form-control', id: 'inputStreet', placeholder: '950' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputPhone', className: 'col-lg-2 control-label' },
+	                  'Phone'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'telephone', type: 'number', className: 'form-control', id: 'inputPhone', placeholder: 'Phone' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputState', className: 'col-lg-2 control-label' },
+	                  'Manager/Owner'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'manager', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'Manager' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Cats Allowed'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { required: true, onChange: this.handleInputChange, name: 'isCatsOk', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'false' },
+	                      'No'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'true' },
+	                      'Yes'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Dogs Allowed'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { required: true, onChange: this.handleInputChange, name: 'isDogsOk', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'false' },
+	                      'No'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'true' },
+	                      'Yes'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Furnished'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { required: true, onChange: this.handleInputChange, name: 'furnished', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'false' },
+	                      'No'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'true' },
+	                      'Yes'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Wheel Chair Access'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { required: true, onChange: this.handleInputChange, name: 'wheelChairAccess', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'false' },
+	                      'No'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'true' },
+	                      'Yes'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Smoking Allowed'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { required: true, onChange: this.handleInputChange, name: 'smoking', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'false' },
+	                      'No'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: 'true' },
+	                      'Yes'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Housing Type'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { required: true, className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { onChange: this.handleInputChange, name: 'houseType', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Apartment'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Condo'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Cottage/Cabin'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Duplex'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Flat'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'House'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'In-Law'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Loft'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Manufactured'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Assisted Living'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'land'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Parking'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { required: true, onChange: this.handleInputChange, name: 'parking', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Carport'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Attached Garage'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Detached Garage'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Off-Street Parking'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Street Parking'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Valet Parking'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'No Parking'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'select', className: 'col-lg-2 control-label' },
+	                  'Laundry'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement(
+	                    'select',
+	                    { required: true, onChange: this.handleInputChange, name: 'laundry', className: 'form-control', id: 'select' },
+	                    _react2.default.createElement(
+	                      'option',
+	                      { value: '' },
+	                      '--Select Option--'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'W/D In Unit'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'W/D Hookups'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Laundry In Bldg'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'Laundry On Site'
+	                    ),
+	                    _react2.default.createElement(
+	                      'option',
+	                      null,
+	                      'No Laundry On Site'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'label',
+	                  { 'for': 'inputState', className: 'col-lg-2 control-label' },
+	                  'Description'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10' },
+	                  _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'description', type: 'text', className: 'form-control', id: 'inputState', placeholder: 'description' })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'form-group' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-lg-10 col-lg-offset-2' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { style: styles.btn, type: 'reset', className: 'btn btn-default' },
+	                    'Cancel'
+	                  ),
+	                  _react2.default.createElement(
+	                    'button',
+	                    { style: styles.btn, type: 'submit', className: 'btn btn-primary' },
+	                    'Submit'
+	                  )
 	                )
 	              )
 	            )
 	          )
-	        )
-	      );
+	        );
+	      }
 	    }
 	  }]);
 
@@ -41555,16 +41600,6 @@
 	            { to: '/add-property' },
 	            _react2.default.createElement(_RaisedButton2.default, { label: 'Providers', secondary: true, style: style })
 	          )
-	        ),
-	        _react2.default.createElement(
-	          'form',
-	          { action: '/files', method: 'post', encType: 'multipart/form-data' },
-	          _react2.default.createElement('input', { type: 'file', name: 'img', accept: 'image/*' }),
-	          _react2.default.createElement(
-	            'button',
-	            { type: 'submit' },
-	            'Upload'
-	          )
 	        )
 	      );
 	    }
@@ -41577,9 +41612,169 @@
 
 /***/ }),
 /* 436 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(173);
+
+	var _axios = __webpack_require__(387);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var style = {
+	  marginLeft: 20
+	};
+
+	var SignInForm = function (_Component) {
+	  _inherits(SignInForm, _Component);
+
+	  function SignInForm(props) {
+	    _classCallCheck(this, SignInForm);
+
+	    var _this = _possibleConstructorReturn(this, (SignInForm.__proto__ || Object.getPrototypeOf(SignInForm)).call(this, props));
+
+	    _this.state = {
+	      user: {}
+	    };
+	    _this.handleInputChange = _this.handleInputChange.bind(_this);
+	    _this.handelSignIn = _this.handelSignIn.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(SignInForm, [{
+	    key: 'handleInputChange',
+	    value: function handleInputChange(e) {
+
+	      var key = e.target.name;
+	      var obj = {};
+	      obj[key] = e.target.value;
+	      console.log(key + ': ' + e.target.value);
+	      var updatedValues = Object.assign({}, this.state.user, obj);
+	      this.setState({ user: updatedValues });
+	    }
+	  }, {
+	    key: 'handelSignIn',
+	    value: function handelSignIn(e) {
+	      e.preventDefault();
+	      var _state$user = this.state.user,
+	          username = _state$user.username,
+	          password = _state$user.password;
+
+	      console.log(username);
+	      console.log(password);
+	      _axios2.default.get(("http://localhost:3000") + '/login', {
+	        auth: {
+	          username: username,
+	          password: password
+	        }
+	      }).then(function (res) {
+	        console.log(res);
+	        localStorage.token = res.data.token;
+	        localStorage.userType = res.data.user.userType;
+	        localStorage.isAdmin = res.data.user.isAdmin ? 'true' : 'false';
+	        localStorage.userId = res.data.user._id;
+	        _reactRouter.browserHistory.push('/');
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var styles = {
+	        form: {
+	          width: '360px',
+	          margin: '0 auto'
+	        },
+	        btn: {
+	          marginRight: '25px'
+	        }
+	      };
+	      return _react2.default.createElement(
+	        'form',
+	        { style: styles.form, onSubmit: this.handelSignIn, className: 'form-horizontal' },
+	        _react2.default.createElement(
+	          'fieldset',
+	          null,
+	          _react2.default.createElement(
+	            'legend',
+	            null,
+	            'Login'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            _react2.default.createElement(
+	              'label',
+	              { 'for': 'inputEmail', className: 'col-lg-2 control-label' },
+	              'Email'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-lg-10' },
+	              _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'username', type: 'text', className: 'form-control', id: 'inputEmail', placeholder: 'Email' })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            _react2.default.createElement(
+	              'label',
+	              { 'for': 'inputPassword', className: 'col-lg-2 control-label' },
+	              'Password'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-lg-10' },
+	              _react2.default.createElement('input', { required: true, onChange: this.handleInputChange, name: 'password', type: 'password', className: 'form-control', id: 'inputPassword', placeholder: 'Password' })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-lg-10 col-lg-offset-2' },
+	              _react2.default.createElement(
+	                'button',
+	                { style: styles.btn, type: 'submit', className: 'btn btn-primary' },
+	                'Login'
+	              ),
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/signup-form', className: 'btn btn-default' },
+	                'Join'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return SignInForm;
+	}(_react.Component);
+
+	exports.default = SignInForm;
 
 /***/ }),
 /* 437 */
@@ -43933,10 +44128,6 @@
 	      null,
 	      property.description
 	    ),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
 	    _react2.default.createElement(
 	      'ul',
 	      { style: styles.img },
@@ -44017,7 +44208,11 @@
 	        ' ',
 	        property.parking
 	      )
-	    )
+	    ),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' })
 	  );
 	};
 
@@ -44179,10 +44374,6 @@
 	      null,
 	      property.description
 	    ),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
 	    _react2.default.createElement(
 	      'ul',
 	      { style: styles.img },
@@ -44264,6 +44455,10 @@
 	        property.parking
 	      )
 	    ),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
 	    _react2.default.createElement(
 	      'div',
 	      null,
@@ -45319,7 +45514,7 @@
 
 	    console.log(isAdmin == false);
 
-	    if (isAdmin == true) {
+	    if (isAdmin == 'true') {
 	      return _react2.default.createElement(
 	        'ul',
 	        { className: 'dropdown-menu' },

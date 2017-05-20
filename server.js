@@ -42,13 +42,15 @@ app.post('/files', upload.single('img'), function (req, res) {
   console.log(req.headers);
   console.log('file: ' +req.file);
   console.log('files: ' +req.files);
-  // var file = req.files[0];
-  // cloudinary.uploader.upload(file.path, function(results) {
-  //   console.log(results);
-  //   res.json({results});
-  // });
-  res.json({file: req.file});
-
+  var file = req.file;
+  cloudinary.uploader.upload(file.path, function(results) {
+    fs.unlink(file.path, function() {
+      console.log(results);
+      res.json({results});
+    });
+  });
+  cloudinary.v2.uploader.destroy('sedx3jqafrkhn1c3vtuu',
+    function(error, result) { console.log(result); });
 });
 
 app.get('/files', function(req, res) {

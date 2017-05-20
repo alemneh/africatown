@@ -30,6 +30,7 @@ const propertyDetailsEdit = () => {
     }
   }
 
+
   return (
     <div style={styles.img}>
         <h1><b>Address:</b> {property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode }</h1>
@@ -42,10 +43,6 @@ const propertyDetailsEdit = () => {
         <h3><b>House Type:</b> {property.houseType}</h3>
         <h3><b>Description:</b> </h3>
         <p>{property.description}</p>
-        <img style={styles.img} src="http://placehold.it/140x100" />
-        <img style={styles.img} src="http://placehold.it/140x100" />
-        <img style={styles.img} src="http://placehold.it/140x100" />
-        <img style={styles.img} src="http://placehold.it/140x100" />
         <ul style={styles.img}>
           <li><b>Cats Ok:</b> {property.isCatsOk ? 'Yes' : 'No'}</li>
           <li><b>Dogs Ok:</b> {property.isDogsOk ? 'Yes' : 'No'}</li>
@@ -55,6 +52,10 @@ const propertyDetailsEdit = () => {
           <li><b>Laundry:</b> {property.laundry }</li>
           <li><b>Parking:</b> {property.parking }</li>
         </ul>
+        <img style={styles.img} src="http://placehold.it/140x100" />
+        <img style={styles.img} src="http://placehold.it/140x100" />
+        <img style={styles.img} src="http://placehold.it/140x100" />
+        <img style={styles.img} src="http://placehold.it/140x100" />
         <div>
           <a onClick={ editForm } style={styles.img} href="#" className="btn btn-warning">Edit</a>
           <a onClick={ deleteProperty }style={styles.img} href="#" className="btn btn-danger">Delete</a>

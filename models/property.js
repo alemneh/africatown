@@ -23,7 +23,8 @@ module.exports = (mongoose, models) => {
     manager: String,
     city: String,
     state: String,
-    zipCode: Number
+    zipCode: Number,
+    propPhotos: []
   },{
     timestamps: true
   });

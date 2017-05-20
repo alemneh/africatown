@@ -17,7 +17,7 @@ const MenuComponent = () => {
     const { userType, isAdmin } = localStorage;
     console.log(isAdmin == false);
 
-    if(isAdmin == true) {
+    if(isAdmin == 'true') {
       return (
         <ul className="dropdown-menu">
           <li><Link to="/">Home</Link></li>
