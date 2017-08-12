@@ -12,11 +12,17 @@ const env            = process.env.NODE_ENV || 'development';
 const CONFIG         = require('./config/config.json')[env];
 const port           = process.env.PORT || CONFIG.port || 3000;
 const cloudinary     = require('cloudinary');
-const cloudinaryCreds = require('./env/cloudinaryCreds.json');
+// const cloudinaryCreds = require('./env/cloudinaryCreds.json');
+// cloudinary.config({
+//   cloud_name: cloudinaryCreds.CLOUDINARY_NAME,
+//   api_key: cloudinaryCreds.API_KEY,
+//   api_secret: cloudinaryCreds.API_SECRET,
+// });
+
 cloudinary.config({
-  cloud_name: cloudinaryCreds.CLOUDINARY_NAME,
-  api_key: cloudinaryCreds.API_KEY,
-  api_secret: cloudinaryCreds.API_SECRET,
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 require('./controllers/login-controller')(loginRouter, models);
 require('./controllers/user-controller')(userRouter, models);
