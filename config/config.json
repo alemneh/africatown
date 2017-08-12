@@ -11,6 +11,6 @@
   },
   "production": {
     "database": "MONGO_URI",
-    "host": ""
+    "host": "https://africatown.herokuapp.com/"
   }
 }

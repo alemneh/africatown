@@ -1,14 +1,10 @@
 var webpack = require('webpack');
 var path = require('path');
-var env = process.env.NODE_ENV || 'development';
+var env = 'production';
 var autoprefixer = require('autoprefixer');
 var CONFIG = require('./config/config')[env];
 var BUILD_DIR = path.resolve(__dirname, 'src/public');
 var APP_DIR = path.resolve(__dirname, 'src/app');
-var PROD;
-if(process.env.NODE_ENV == 'production') {
-  PROD = true;
-}
 
 var definePlugin = new webpack.DefinePlugin({
   'process.env': {

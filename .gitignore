@@ -8,6 +8,7 @@ server.crt
 server.csr
 server.key
 env
+config/
 
 # Runtime data
 pids
