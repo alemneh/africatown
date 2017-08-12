@@ -9,6 +9,14 @@ const propertyDetails = () => {
     }
   }
 
+  const renderPhotos = () => {
+    return property.propPhotos.map((photoUrl) => {
+      return (
+        <img height="150" width="200" style={styles.img} src={photoUrl} />
+      )
+    })
+  }
+
   return (
     <div style={styles.img}>
       <h1><b>Address:</b> {property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode }</h1>
@@ -30,10 +38,9 @@ const propertyDetails = () => {
         <li><b>Laundry:</b> {property.laundry }</li>
         <li><b>Parking:</b> {property.parking }</li>
       </ul>
-      <img style={styles.img} src="http://placehold.it/140x100" />
-      <img style={styles.img} src="http://placehold.it/140x100" />
-      <img style={styles.img} src="http://placehold.it/140x100" />
-      <img style={styles.img} src="http://placehold.it/140x100" />
+      <div>
+        { renderPhotos() }
+      </div>
     </div>
   )
 }

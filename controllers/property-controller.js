@@ -9,5 +9,8 @@ module.exports = (propertyRouter, models) => {
 
   propertyRouter.route('/properties/:id')
     .get((req, res) => {PropertyRoutes.getOneProperty(req, res);})
-    .put((req, res) => {PropertyRoutes.updateProperty(req, res);})
+    .put((req, res) => {PropertyRoutes.updateProperty(req, res);});
+
+  propertyRouter.route('/properties/:id/photos')
+    .post((req, res) => {PropertyRoutes.addPhotoToProperty(req, res);});
 };

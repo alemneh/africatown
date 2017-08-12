@@ -30,6 +30,14 @@ const propertyDetailsEdit = () => {
     }
   }
 
+  const renderPhotos = () => {
+    return property.propPhotos.map((photoUrl) => {
+      return (
+        <img height="150" width="200" style={styles.img} src={photoUrl} />
+      )
+    })
+  }
+
 
   return (
     <div style={styles.img}>
@@ -52,10 +60,9 @@ const propertyDetailsEdit = () => {
           <li><b>Laundry:</b> {property.laundry }</li>
           <li><b>Parking:</b> {property.parking }</li>
         </ul>
-        <img style={styles.img} src="http://placehold.it/140x100" />
-        <img style={styles.img} src="http://placehold.it/140x100" />
-        <img style={styles.img} src="http://placehold.it/140x100" />
-        <img style={styles.img} src="http://placehold.it/140x100" />
+        <div>
+          { renderPhotos() }
+        </div>
         <div>
           <a onClick={ editForm } style={styles.img} href="#" className="btn btn-warning">Edit</a>
           <a onClick={ deleteProperty }style={styles.img} href="#" className="btn btn-danger">Delete</a>

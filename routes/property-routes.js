@@ -32,6 +32,32 @@ let PropertyRoutes = {
       res.json({message: 'Update successful!', property });
     });
   },
+
+  addPhotoToProperty: function(req, res) {
+    console.log(req.body);
+    console.log(req.params);
+
+
+    Property.findOne({_id: req.params.id}).exec()
+        .then((prop) => {
+          console.log(req.body);
+          req.body.forEach((url) => {
+            prop.propPhotos.push(url);
+          });
+          prop.save();
+
+          res.json({ prop });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+  },
+
 };
+
+
+
+
 
 module.exports = PropertyRoutes;

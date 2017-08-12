@@ -109,6 +109,8 @@ let UserRoutes = {
       });
   },
 
+
+
   removeAProperty: function(req, res) {
 
     User.findById(req.params.id).exec()

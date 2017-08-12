@@ -38616,12 +38616,14 @@
 	      newProperty: {},
 	      file: '',
 	      addPhoto: false,
-	      photos: []
+	      photos: [],
+	      uploadDone: false
 	    };
 	    _this.handleInputChange = _this.handleInputChange.bind(_this);
 	    _this.handelAddProperty = _this.handelAddProperty.bind(_this);
 	    _this.handleFileChange = _this.handleFileChange.bind(_this);
 	    _this.renderPhotos = _this.renderPhotos.bind(_this);
+	    _this.doneUploading = _this.doneUploading.bind(_this);
 	    return _this;
 	  }
 
@@ -38638,30 +38640,62 @@
 	  }, {
 	    key: 'handleFileChange',
 	    value: function handleFileChange(e) {
-	      e.preventDefault();
-	      console.log(e.target.files[0]);
+	      var _this2 = this;
+
+	      // e.preventDefault();
+	      // console.log();
+	      // console.log(e.target.files[0]);
+	      var data = new FormData();
+	      data.append('file', e.target.files[0]);
+	      data.append('userId', '12wew2e3323232qwq23');
+	      data.append('description', 'some value user types');
+	      console.log(data);
+	      // '/files' is your node.js route that triggers our middleware
+	      _axios2.default.post('/files', data).then(function (response) {
+	        var photos = _this2.state.photos.slice();
+	        photos.push(response.data.results.secure_url);
+	        _this2.setState({ photos: photos });
+	        console.log(response.data.results.secure_url); // do something with the response
+	      });
+	    }
+	  }, {
+	    key: 'doneUploading',
+	    value: function doneUploading() {
+	      var _this3 = this;
+
+	      var _localStorage2 = localStorage,
+	          token = _localStorage2.token,
+	          userId = _localStorage2.userId,
+	          propId = _localStorage2.propId;
+
+	      var photos = this.state.photos;
+	      var url = ("http://localhost:3000") + '/properties/' + propId + '/photos';
+	      _axios2.default.post(url, photos).then(function (res) {
+	        console.log(res);
+	        _this3.setState({ uploadDone: true });
+	        _reactRouter.browserHistory.push('/');
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
+	      console.log(this.state.photos);
 	    }
 	  }, {
 	    key: 'renderPhotos',
 	    value: function renderPhotos() {
-	      var _state = this.state,
-	          addPhoto = _state.addPhoto,
-	          photos = _state.photos;
-
-	      if (photos.length < 1) {
-	        for (var i = 0; i < 4; i++) {
-	          return _react2.default.createElement(
-	            'form',
-	            null,
-	            _react2.default.createElement('input', { type: 'file', onChange: this.handleFileChange }),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'submit' },
-	              'Upload'
-	            )
-	          );
-	        }
-	      }
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('input', { type: 'file', onChange: this.handleFileChange }),
+	        _react2.default.createElement('input', { type: 'file', onChange: this.handleFileChange }),
+	        _react2.default.createElement('input', { type: 'file', onChange: this.handleFileChange }),
+	        _react2.default.createElement('input', { type: 'file', onChange: this.handleFileChange }),
+	        _react2.default.createElement('input', { type: 'file', onChange: this.handleFileChange }),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.doneUploading },
+	          'Done'
+	        )
+	      );
 	    }
 	  }, {
 	    key: 'handleInputChange',
@@ -38677,17 +38711,18 @@
 	  }, {
 	    key: 'handelAddProperty',
 	    value: function handelAddProperty(e) {
-	      var _this2 = this;
+	      var _this4 = this;
 
 	      e.preventDefault();
-	      var _localStorage2 = localStorage,
-	          userId = _localStorage2.userId,
-	          token = _localStorage2.token;
+	      var _localStorage3 = localStorage,
+	          userId = _localStorage3.userId,
+	          token = _localStorage3.token;
 
 	      var url = ("http://localhost:3000") + '/users/' + userId + '/properties/';
 	      _axios2.default.post(url, this.state.newProperty).then(function (res) {
 	        console.log(res);
-	        _this2.setState({ addPhoto: true });
+	        localStorage.propId = res.data.newProperty._id;
+	        _this4.setState({ addPhoto: true });
 	        // browserHistory.push('/properties-list');
 	      }).catch(function (err) {
 	        console.log(err);
@@ -44022,6 +44057,12 @@
 	    }
 	  };
 
+	  var renderPhotos = function renderPhotos() {
+	    return property.propPhotos.map(function (photoUrl) {
+	      return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photoUrl });
+	    });
+	  };
+
 	  return _react2.default.createElement(
 	    'div',
 	    { style: styles.img },
@@ -44209,10 +44250,11 @@
 	        property.parking
 	      )
 	    ),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' })
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      renderPhotos()
+	    )
 	  );
 	};
 
@@ -44268,6 +44310,12 @@
 	    }
 	  };
 
+	  var renderPhotos = function renderPhotos() {
+	    return property.propPhotos.map(function (photoUrl) {
+	      return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photoUrl });
+	    });
+	  };
+
 	  return _react2.default.createElement(
 	    'div',
 	    { style: styles.img },
@@ -44455,10 +44503,11 @@
 	        property.parking
 	      )
 	    ),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
-	    _react2.default.createElement('img', { style: styles.img, src: 'http://placehold.it/140x100' }),
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      renderPhotos()
+	    ),
 	    _react2.default.createElement(
 	      'div',
 	      null,

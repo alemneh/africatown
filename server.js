@@ -31,6 +31,7 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     console.log('filename');
+    console.log(file);
     cb(null, file.fieldname + '-' + Date.now() + '.jpg');
   }
 });
@@ -38,14 +39,15 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 var Image = models.Image;
 
-app.post('/files', upload.single('img'), function (req, res) {
+app.post('/files', upload.single('file'), function (req, res) {
   console.log(req.headers);
-  console.log('file: ' +req.file);
-  console.log('files: ' +req.files);
+  console.log(req.file);
+  console.log(req.file.userId);
+  console.log('files');
   var file = req.file;
   cloudinary.uploader.upload(file.path, function(results) {
     fs.unlink(file.path, function() {
-      console.log(results);
+      console.log(results.url);
       res.json({results});
     });
   });
@@ -57,7 +59,7 @@ app.get('/files', function(req, res) {
   Image.find({}, function(err, files) {
     if(err) throw err;
     res.contentType = files[0].img.contentType;
-    res.send()
+    res.send();
   });
 });
 

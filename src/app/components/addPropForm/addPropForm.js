@@ -17,12 +17,14 @@ class AddPropertyForm extends Component {
       newProperty: {},
       file: '',
       addPhoto: false,
-      photos: []
+      photos: [],
+      uploadDone: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handelAddProperty = this.handelAddProperty.bind(this);
     this.handleFileChange = this.handleFileChange.bind(this);
     this.renderPhotos = this.renderPhotos.bind(this);
+    this.doneUploading = this.doneUploading.bind(this);
   }
 
   componentWillMount() {
@@ -33,22 +35,49 @@ class AddPropertyForm extends Component {
   }
 
   handleFileChange(e) {
-    e.preventDefault();
-    console.log(e.target.files[0]);
+    // e.preventDefault();
+    // console.log();
+    // console.log(e.target.files[0]);
+    const data = new FormData();
+    data.append('file', e.target.files[0]);
+    data.append('userId', '12wew2e3323232qwq23');
+    data.append('description', 'some value user types');
+    console.log(data);
+    // '/files' is your node.js route that triggers our middleware
+    axios.post('/files', data).then((response) => {
+      let photos = this.state.photos.slice();
+      photos.push(response.data.results.secure_url);
+      this.setState({ photos });
+      console.log(response.data.results.secure_url); // do something with the response
+    });
+  }
+
+  doneUploading() {
+    const { token, userId, propId } = localStorage;
+    let photos = this.state.photos;
+    const url = process.env.URL + '/properties/' + propId + '/photos';
+    axios.post(url, photos).then((res) => {
+      console.log(res);
+      this.setState({ uploadDone: true});
+      browserHistory.push('/');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    console.log(this.state.photos);
   }
 
   renderPhotos() {
-    const { addPhoto, photos } = this.state;
-    if(photos.length < 1) {
-      for(var i = 0; i < 4; i++) {
         return (
-          <form>
+          <div>
             <input type="file"  onChange={this.handleFileChange} />
-            <button type="submit">Upload</button>
-          </form>
+            <input type="file"  onChange={this.handleFileChange} />
+            <input type="file"  onChange={this.handleFileChange} />
+            <input type="file"  onChange={this.handleFileChange} />
+            <input type="file"  onChange={this.handleFileChange} />
+            <button onClick={this.doneUploading} >Done</button>
+          </div>
         )
-      }
-    }
   }
 
   handleInputChange(e) {
@@ -69,6 +98,7 @@ class AddPropertyForm extends Component {
     axios.post(url, this.state.newProperty)
       .then((res) => {
         console.log(res);
+        localStorage.propId = res.data.newProperty._id;
         this.setState({ addPhoto: true});
         // browserHistory.push('/properties-list');
       })
@@ -87,6 +117,7 @@ class AddPropertyForm extends Component {
         marginRight: '25px'
       }
     }
+
 
     if(this.state.addPhoto) {
       return (
