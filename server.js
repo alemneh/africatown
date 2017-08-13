@@ -12,6 +12,7 @@ const env            = process.env.NODE_ENV || 'development';
 const CONFIG         = require('./config/config.json')[env];
 const port           = process.env.PORT || CONFIG.port || 3000;
 const cloudinary     = require('cloudinary');
+const path           = require('path');
 // const cloudinaryCreds = require('./env/cloudinaryCreds.json');
 // cloudinary.config({
 //   cloud_name: cloudinaryCreds.CLOUDINARY_NAME,
@@ -32,6 +33,7 @@ var multer  = require('multer');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    path.dirname(require.main.filename);
     console.log('destination');
     cb(null, '/uploads');
   },
