@@ -30,7 +30,7 @@ require('./controllers/user-controller')(userRouter, models);
 require('./controllers/property-controller')(propertyRouter, models);
 
 var multer  = require('multer');
-const testFolder = path.dirname(require.main.filename) + '/uploads';
+const testFolder = path.dirname(require.main.filename);
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     fs.readdir(testFolder, (err, files) => {
