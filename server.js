@@ -33,7 +33,8 @@ var multer  = require('multer');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    path.dirname(require.main.filename);
+    console.log(path.dirname(require.main.filename));
+
     console.log('destination');
     cb(null, '/uploads');
   },
