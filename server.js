@@ -13,7 +13,6 @@ const CONFIG         = require('./config/config.json')[env];
 const port           = process.env.PORT || CONFIG.port || 3000;
 const cloudinary     = require('cloudinary');
 const path           = require('path');
-const fs             = require('fs');
 // const cloudinaryCreds = require('./env/cloudinaryCreds.json');
 // cloudinary.config({
 //   cloud_name: cloudinaryCreds.CLOUDINARY_NAME,
