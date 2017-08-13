@@ -46,17 +46,26 @@ let UserRoutes = {
   },
 
   deleteUser: function(req, res) {
-    User.findById(req.params.id).exec()
-      .then((user) => {
-        user.properties.forEach((propId) => {
-          Property.findById(propId).remove().exec();
+    User.findById(req.params.id)
+        .populate('properties').exec()
+        .then((user) => {
+
+          user.properties.forEach((prop) => {
+            prop.propPhotos.forEach((photoUrl) => {
+              // deletePhoto(photoUrl);
+              console.log(photoUrl);
+            });
+
+            // Property.findById(prop._id).remove().exec();
+
+          });
+
+          // user.remove();
+          res.json({message: 'user removed'});
+        })
+        .catch((err) => {
+          throw err;
         });
-        user.remove();
-        res.json({message: 'user removed'});
-      })
-      .catch((err) => {
-        throw err;
-      });
   },
 
   getAllUserProperties: function(req, res) {
