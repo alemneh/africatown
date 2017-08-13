@@ -30,18 +30,12 @@ require('./controllers/user-controller')(userRouter, models);
 require('./controllers/property-controller')(propertyRouter, models);
 
 var multer  = require('multer');
-const testFolder = path.dirname(require.main.filename);
+const rootDir = path.dirname(require.main.filename);
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    fs.readdir(testFolder, (err, files) => {
-      console.log(files);
-      files.forEach(file => {
-        console.log(file);
-      });
-    });
 
     console.log('destination');
-    cb(null, testFolder);
+    cb(null, rootDir);
   },
   filename: function (req, file, cb) {
     console.log('filename');

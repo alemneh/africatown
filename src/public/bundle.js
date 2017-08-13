@@ -26620,7 +26620,7 @@
 	      onClick: function onClick() {
 	        viewPropertyDetails(property, isEditMode);
 	      },
-	      leftAvatar: _react2.default.createElement(_Avatar2.default, { src: property.propPicUrl }),
+	      leftAvatar: _react2.default.createElement(_Avatar2.default, { src: property.propPhotos[0] }),
 	      primaryText: property.address,
 	      secondaryText: _react2.default.createElement(
 	        'p',
