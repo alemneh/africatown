@@ -38647,11 +38647,9 @@
 	      // console.log(e.target.files[0]);
 	      var data = new FormData();
 	      data.append('file', e.target.files[0]);
-	      data.append('userId', '12wew2e3323232qwq23');
-	      data.append('description', 'some value user types');
 	      console.log(data);
 	      // '/files' is your node.js route that triggers our middleware
-	      _axios2.default.post('/files', data).then(function (response) {
+	      _axios2.default.post(("https://africatown.herokuapp.com") + '/files', data).then(function (response) {
 	        var photos = _this2.state.photos.slice();
 	        photos.push(response.data.results.secure_url);
 	        _this2.setState({ photos: photos });
