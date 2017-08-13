@@ -13,6 +13,7 @@ const CONFIG         = require('./config/config.json')[env];
 const port           = process.env.PORT || CONFIG.port || 3000;
 const cloudinary     = require('cloudinary');
 const path           = require('path');
+const fs             = require('fs');
 // const cloudinaryCreds = require('./env/cloudinaryCreds.json');
 // cloudinary.config({
 //   cloud_name: cloudinaryCreds.CLOUDINARY_NAME,
@@ -30,13 +31,18 @@ require('./controllers/user-controller')(userRouter, models);
 require('./controllers/property-controller')(propertyRouter, models);
 
 var multer  = require('multer');
-
+const testFolder = path.dirname(require.main.filename) + '/uploads';
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log(path.dirname(require.main.filename));
+    fs.readdir(testFolder, (err, files) => {
+      console.log(files);
+      files.forEach(file => {
+        console.log(file);
+      });
+    });
 
     console.log('destination');
-    cb(null, '/uploads');
+    cb(null, testFolder);
   },
   filename: function (req, file, cb) {
     console.log('filename');
