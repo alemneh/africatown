@@ -59,8 +59,6 @@ app.post('/files', upload.single('file'), function (req, res) {
       res.json({results});
     });
   });
-  cloudinary.v2.uploader.destroy('sedx3jqafrkhn1c3vtuu',
-    function(error, result) { console.log(result); });
 });
 
 app.get('/files', function(req, res) {

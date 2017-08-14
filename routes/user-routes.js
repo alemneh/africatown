@@ -3,6 +3,13 @@ const models = require('../models');
 
 const User = models.User;
 const Property = models.Property;
+const cloudinary     = require('cloudinary');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 let UserRoutes = {
 
@@ -51,12 +58,13 @@ let UserRoutes = {
         .then((user) => {
 
           user.properties.forEach((prop) => {
-            prop.propPhotos.forEach((photoUrl) => {
-              // deletePhoto(photoUrl);
-              console.log(photoUrl);
+            prop.propPhotos.forEach((photo) => {
+              console.log(photo);
+              cloudinary.v2.uploader.destroy(photo.public_id,
+                function(error, result) { console.log(result); });
             });
 
-            // Property.findById(prop._id).remove().exec();
+            Property.findById(prop._id).remove().exec();
 
           });
 

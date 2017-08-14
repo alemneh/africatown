@@ -44,7 +44,8 @@ class AddPropertyForm extends Component {
     // '/files' is your node.js route that triggers our middleware
     axios.post(process.env.URL + '/files', data).then((response) => {
       let photos = this.state.photos.slice();
-      photos.push(response.data.results.secure_url);
+      let newPhoto = response.data.results;
+      photos.push({url: newPhoto.secure_url, public_id: newPhoto.public_id});
       this.setState({ photos });
       console.log(response.data.results.secure_url); // do something with the response
     });

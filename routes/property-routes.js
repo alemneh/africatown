@@ -41,8 +41,8 @@ let PropertyRoutes = {
     Property.findOne({_id: req.params.id}).exec()
         .then((prop) => {
           console.log(req.body);
-          req.body.forEach((url) => {
-            prop.propPhotos.push(url);
+          req.body.forEach((photo) => {
+            prop.propPhotos.push(photo);
           });
           prop.save();
 

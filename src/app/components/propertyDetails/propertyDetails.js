@@ -10,9 +10,9 @@ const propertyDetails = () => {
   }
 
   const renderPhotos = () => {
-    return property.propPhotos.map((photoUrl) => {
+    return property.propPhotos.map((photo) => {
       return (
-        <img height="150" width="200" style={styles.img} src={photoUrl} />
+        <img height="150" width="200" style={styles.img} src={photo.url} />
       )
     })
   }

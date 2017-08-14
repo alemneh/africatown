@@ -38651,7 +38651,8 @@
 	      // '/files' is your node.js route that triggers our middleware
 	      _axios2.default.post(("https://africatown.herokuapp.com") + '/files', data).then(function (response) {
 	        var photos = _this2.state.photos.slice();
-	        photos.push(response.data.results.secure_url);
+	        var newPhoto = response.data.results;
+	        photos.push({ url: newPhoto.secure_url, public_id: newPhoto.public_id });
 	        _this2.setState({ photos: photos });
 	        console.log(response.data.results.secure_url); // do something with the response
 	      });
@@ -44056,8 +44057,8 @@
 	  };
 
 	  var renderPhotos = function renderPhotos() {
-	    return property.propPhotos.map(function (photoUrl) {
-	      return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photoUrl });
+	    return property.propPhotos.map(function (photo) {
+	      return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photo.url });
 	    });
 	  };
 
@@ -44309,8 +44310,8 @@
 	  };
 
 	  var renderPhotos = function renderPhotos() {
-	    return property.propPhotos.map(function (photoUrl) {
-	      return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photoUrl });
+	    return property.propPhotos.map(function (photo) {
+	      return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photo.url });
 	    });
 	  };
 
