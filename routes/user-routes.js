@@ -64,7 +64,7 @@ let UserRoutes = {
                 function(error, result) { console.log(result); });
             });
 
-            Property.findById(prop._id).remove().exec();
+            // Property.findById(prop._id).remove().exec();
 
           });
 
