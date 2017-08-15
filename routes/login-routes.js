@@ -11,9 +11,9 @@ let LoginController = {
     const method = authorizationArray[0];
     const base64ed = authorizationArray[1];
     const authArray = new Buffer(base64ed, 'base64').toString().split(':');
-    const name = authArray[0];
+    const email = authArray[0];
     const password = authArray[1];
-    User.findOne({name:name}, (err, user) => {
+    User.findOne({email:email}, (err, user) => {
       if(err) throw err;
       if(!user) {
         return res.status(403).json({status: 'failure', message: 'Invalid User!'});
