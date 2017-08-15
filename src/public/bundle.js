@@ -44293,8 +44293,8 @@
 	        _react2.default.createElement(
 	          'div',
 	          null,
-	          renderPhotos(),
-	          _react2.default.createElement('img', { src: selectedPhoto })
+	          this.renderPhotos(),
+	          _react2.default.createElement('img', { src: this.state.selectedPhoto })
 	        )
 	      );
 	    }

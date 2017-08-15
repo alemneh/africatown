@@ -59,8 +59,8 @@ class propertyDetails extends Component {
           <li><b>Parking:</b> {property.parking }</li>
         </ul>
         <div>
-          { renderPhotos() }
-          <img src={selectedPhoto} />
+          { this.renderPhotos() }
+          <img src={this.state.selectedPhoto} />
         </div>
       </div>
     )
