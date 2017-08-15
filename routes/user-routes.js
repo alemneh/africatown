@@ -53,9 +53,13 @@ let UserRoutes = {
   },
 
   deleteUser: function(req, res) {
+    let userHolder;
+
     User.findById(req.params.id)
         .populate('properties').exec()
         .then((user) => {
+
+          userHolder = user;
 
           user.properties.forEach((prop) => {
             prop.propPhotos.forEach((photo) => {
@@ -72,7 +76,8 @@ let UserRoutes = {
           });
         })
         .then((prop) => {
-          res.json({message: 'user removed', prop});
+          userHolder.remove();
+          res.json({message: 'user removed'});
         })
         .catch((err) => {
           throw err;
