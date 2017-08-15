@@ -44073,10 +44073,17 @@
 	  }
 
 	  _createClass(propertyDetails, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var property = JSON.parse(localStorage.property);
+	      this.setState({ selectedPhoto: property.propPhotos[0].url });
+	    }
+	  }, {
 	    key: 'handlePhotoClick',
 	    value: function handlePhotoClick(e) {
 	      console.log("photo clicked");
 	      console.log(e.target);
+	      this.setState({ selectedPhoto: e.target.src });
 	    }
 	  }, {
 	    key: 'renderPhotos',

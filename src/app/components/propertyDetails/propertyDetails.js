@@ -10,9 +10,15 @@ class propertyDetails extends Component {
     this.handlePhotoClick = this.handlePhotoClick.bind(this);
   }
 
+  componentWillMount() {
+    const property = JSON.parse(localStorage.property);
+    this.setState({ selectedPhoto: property.propPhotos[0].url });
+  }
+
   handlePhotoClick(e) {
     console.log("photo clicked");
     console.log(e.target);
+    this.setState({ selectedPhoto: e.target.src });
   }
 
   renderPhotos() {
