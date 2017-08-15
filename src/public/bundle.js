@@ -44042,220 +44042,266 @@
 	  value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var propertyDetails = function propertyDetails() {
-	  var property = JSON.parse(localStorage.property);
-	  var styles = {
-	    img: {
-	      margin: '10px'
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var propertyDetails = function (_Component) {
+	  _inherits(propertyDetails, _Component);
+
+	  function propertyDetails(props) {
+	    _classCallCheck(this, propertyDetails);
+
+	    var _this = _possibleConstructorReturn(this, (propertyDetails.__proto__ || Object.getPrototypeOf(propertyDetails)).call(this, props));
+
+	    _this.state = {
+	      selectedPhoto: ''
+	    };
+
+	    _this.handlePhotoClick = _this.handlePhotoClick.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(propertyDetails, [{
+	    key: 'handlePhotoClick',
+	    value: function handlePhotoClick(e) {
+	      console.log("photo clicked");
+	      console.log(e.target);
 	    }
-	  };
+	  }, {
+	    key: 'renderPhotos',
+	    value: function renderPhotos() {
+	      var _this2 = this;
 
-	  var renderPhotos = function renderPhotos() {
-	    return property.propPhotos.map(function (photo) {
-	      return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photo.url });
-	    });
-	  };
+	      var styles = {
+	        img: {
+	          margin: '10px'
+	        }
+	      };
+	      var property = JSON.parse(localStorage.property);
+	      return property.propPhotos.map(function (photo) {
+	        return _react2.default.createElement('img', { height: '150', width: '200', style: styles.img, src: photo.url, onClick: _this2.handlePhotoClick });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var property = JSON.parse(localStorage.property);
+	      var styles = {
+	        img: {
+	          margin: '10px'
+	        }
+	      };
 
-	  return _react2.default.createElement(
-	    'div',
-	    { style: styles.img },
-	    _react2.default.createElement(
-	      'h1',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Address:'
-	      ),
-	      ' ',
-	      property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Rent:'
-	      ),
-	      ' ',
-	      '$' + property.price
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Square Feet:'
-	      ),
-	      ' ',
-	      property.sqft + 'ft'
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Manager/Owner:'
-	      ),
-	      ' ',
-	      property.manager
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Phone:'
-	      ),
-	      ' ',
-	      property.telephone
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Bedrooms:'
-	      ),
-	      ' ',
-	      property.numOfBedrms
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Bathrooms:'
-	      ),
-	      ' ',
-	      property.numOfBathrms
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'House Type:'
-	      ),
-	      ' ',
-	      property.houseType
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      _react2.default.createElement(
-	        'b',
-	        null,
-	        'Description:'
-	      ),
-	      ' '
-	    ),
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      property.description
-	    ),
-	    _react2.default.createElement(
-	      'ul',
-	      { style: styles.img },
-	      _react2.default.createElement(
-	        'li',
-	        null,
+	      return _react2.default.createElement(
+	        'div',
+	        { style: styles.img },
 	        _react2.default.createElement(
-	          'b',
+	          'h1',
 	          null,
-	          'Cats Ok:'
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Address:'
+	          ),
+	          ' ',
+	          property.address + ' ' + property.city + ', ' + property.state + ' ' + property.zipCode
 	        ),
-	        ' ',
-	        property.isCatsOk ? 'Yes' : 'No'
-	      ),
-	      _react2.default.createElement(
-	        'li',
-	        null,
 	        _react2.default.createElement(
-	          'b',
+	          'h3',
 	          null,
-	          'Dogs Ok:'
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Rent:'
+	          ),
+	          ' ',
+	          '$' + property.price
 	        ),
-	        ' ',
-	        property.isDogsOk ? 'Yes' : 'No'
-	      ),
-	      _react2.default.createElement(
-	        'li',
-	        null,
 	        _react2.default.createElement(
-	          'b',
+	          'h3',
 	          null,
-	          'Smoking Ok:'
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Square Feet:'
+	          ),
+	          ' ',
+	          property.sqft + 'ft'
 	        ),
-	        ' ',
-	        property.smoking ? 'Yes' : 'No'
-	      ),
-	      _react2.default.createElement(
-	        'li',
-	        null,
 	        _react2.default.createElement(
-	          'b',
+	          'h3',
 	          null,
-	          'Furnished:'
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Manager/Owner:'
+	          ),
+	          ' ',
+	          property.manager
 	        ),
-	        ' ',
-	        property.furnished ? 'Yes' : 'No'
-	      ),
-	      _react2.default.createElement(
-	        'li',
-	        null,
 	        _react2.default.createElement(
-	          'b',
+	          'h3',
 	          null,
-	          'Wheel Chair Access:'
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Phone:'
+	          ),
+	          ' ',
+	          property.telephone
 	        ),
-	        ' ',
-	        property.wheelChairAccess ? 'Yes' : 'No'
-	      ),
-	      _react2.default.createElement(
-	        'li',
-	        null,
 	        _react2.default.createElement(
-	          'b',
+	          'h3',
 	          null,
-	          'Laundry:'
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Bedrooms:'
+	          ),
+	          ' ',
+	          property.numOfBedrms
 	        ),
-	        ' ',
-	        property.laundry
-	      ),
-	      _react2.default.createElement(
-	        'li',
-	        null,
 	        _react2.default.createElement(
-	          'b',
+	          'h3',
 	          null,
-	          'Parking:'
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Bathrooms:'
+	          ),
+	          ' ',
+	          property.numOfBathrms
 	        ),
-	        ' ',
-	        property.parking
-	      )
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      renderPhotos()
-	    )
-	  );
-	};
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'House Type:'
+	          ),
+	          ' ',
+	          property.houseType
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          _react2.default.createElement(
+	            'b',
+	            null,
+	            'Description:'
+	          ),
+	          ' '
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          property.description
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { style: styles.img },
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Cats Ok:'
+	            ),
+	            ' ',
+	            property.isCatsOk ? 'Yes' : 'No'
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Dogs Ok:'
+	            ),
+	            ' ',
+	            property.isDogsOk ? 'Yes' : 'No'
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Smoking Ok:'
+	            ),
+	            ' ',
+	            property.smoking ? 'Yes' : 'No'
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Furnished:'
+	            ),
+	            ' ',
+	            property.furnished ? 'Yes' : 'No'
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Wheel Chair Access:'
+	            ),
+	            ' ',
+	            property.wheelChairAccess ? 'Yes' : 'No'
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Laundry:'
+	            ),
+	            ' ',
+	            property.laundry
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Parking:'
+	            ),
+	            ' ',
+	            property.parking
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          renderPhotos(),
+	          _react2.default.createElement('img', { src: selectedPhoto })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return propertyDetails;
+	}(_react.Component);
 
 	exports.default = propertyDetails;
 

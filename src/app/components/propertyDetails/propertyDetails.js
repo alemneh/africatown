@@ -6,9 +6,12 @@ class propertyDetails extends Component {
     this.state = {
       selectedPhoto: ''
     }
+
+    this.handlePhotoClick = this.handlePhotoClick.bind(this);
   }
 
   handlePhotoClick(e) {
+    console.log("photo clicked");
     console.log(e.target);
   }
 
