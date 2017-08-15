@@ -44301,6 +44301,7 @@
 	          'div',
 	          null,
 	          this.renderPhotos(),
+	          _react2.default.createElement('br', null),
 	          _react2.default.createElement('img', { src: this.state.selectedPhoto })
 	        )
 	      );

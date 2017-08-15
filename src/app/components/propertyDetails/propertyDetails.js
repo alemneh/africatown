@@ -66,6 +66,7 @@ class propertyDetails extends Component {
         </ul>
         <div>
           { this.renderPhotos() }
+          <br />
           <img src={this.state.selectedPhoto} />
         </div>
       </div>
