@@ -47,6 +47,8 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 var Image = models.Image;
 
+
+
 app.post('/files', upload.single('file'), function (req, res) {
   console.log(req.headers);
   console.log(req.file);

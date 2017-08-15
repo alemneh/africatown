@@ -64,12 +64,15 @@ let UserRoutes = {
                 function(error, result) { console.log(result); });
             });
 
-            // Property.findById(prop._id).remove().exec();
+            user.remove();
+
+
+            return Property.findById(prop._id).remove().exec();
 
           });
-
-          // user.remove();
-          res.json({message: 'user removed'});
+        })
+        .then((prop) => {
+          res.json({message: 'user removed', prop});
         })
         .catch((err) => {
           throw err;
@@ -130,20 +133,26 @@ let UserRoutes = {
 
   removeAProperty: function(req, res) {
 
-    User.findById(req.params.id).exec()
+    User.findById(req.params.id)
+     .populate('properties').exec()
      .then((user) => {
-       if(user.properties.indexOf(req.params.propId) == -1) {
-         res.json({message: 'Property does not exist'});
-         console.log('aborted promise');
-         throw new Error('Property does not exist');
-       } else {
+
+       user.properties.forEach((prop) => {
+         prop.propPhotos.forEach((photo) => {
+           console.log(photo);
+           cloudinary.v2.uploader.destroy(photo.public_id,
+             function(error, result) { console.log(result); });
+         });
+
          user.properties.pull(req.params.propId);
          user.save();
          return Property.findById(req.params.propId).remove().exec();
-       }
+
+       });
+
      })
      .then((prop) => {
-       res.json({ message: 'Property removed!'});
+       res.json({ message: 'Property removed!', prop});
      })
      .catch((err) => {
        if(err.message == 'Property does not exist') {

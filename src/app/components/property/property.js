@@ -9,7 +9,7 @@ const Property = ({ property, viewPropertyDetails, isEditMode }) => {
     <div>
       <ListItem
             onClick={ () => {viewPropertyDetails(property, isEditMode)} }
-            leftAvatar={<Avatar src={ property.propPhotos[0] } />}
+            leftAvatar={<Avatar src={ property.propPhotos[0].url } />}
             primaryText={ property.address }
             secondaryText={
               <p>
